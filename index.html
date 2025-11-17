@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Calendario de Adviento · Anxan</title>
+  <title>Calendario de Adviento · AnxanWoman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Fuente un poco más gamer -->
+  <!-- Fuente -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -225,30 +225,16 @@
         linear-gradient(145deg, #020617, #020617);
     }
 
-    .day.locked {
-      cursor: default;
-      opacity: 0.55;
-      border-style: dashed;
-      border-color: rgba(75, 85, 99, 0.8);
-      background: linear-gradient(145deg, #020617, #020617);
-      box-shadow: none;
-    }
-
-    .day.locked::before {
-      content: "🔒";
-      font-size: 1.1rem;
-      opacity: 0.2;
-    }
-
-    .day.locked:hover {
-      transform: none;
-      box-shadow: none;
-      border-color: rgba(75, 85, 99, 0.8);
-    }
-
     .day-number {
       font-weight: 600;
       font-size: 1.05rem;
+    }
+
+    .day-label-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
     }
 
     .day-label {
@@ -260,6 +246,16 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .day-stream {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(249, 115, 22, 0.9);
+      background: rgba(249, 115, 22, 0.12);
+      color: var(--accent-2);
+      white-space: nowrap;
     }
 
     .day-tag {
@@ -385,7 +381,7 @@
       <div class="title-block">
         <h1>
           <span class="emoji">🎄</span>
-          Calendario de Adviento · Anxan
+          Calendario de Adviento · AnxanWoman
         </h1>
         <p class="subtitle">
           El chat elige la casilla al final del directo para desbloquear el contenido del siguiente día.
@@ -408,7 +404,7 @@
           <!-- Las casillas se crean con JavaScript -->
         </div>
         <p class="hint">
-          Las casillas futuras aparecen <strong>bloqueadas</strong>. Solo se pueden abrir a partir de su día.
+          Todas las casillas están <strong>desbloqueadas</strong> en modo prueba. En directo puedes abrir solo la que elija el chat.
         </p>
       </section>
 
@@ -416,7 +412,7 @@
       <section class="details" id="detailsPanel">
         <div class="details-title">
           <h2 id="detailsTitle">Selecciona una casilla</h2>
-          <span class="details-status locked" id="detailsStatus">Bloqueado</span>
+          <span class="details-status locked" id="detailsStatus">—</span>
         </div>
         <div class="details-meta">
           <span class="pill" id="detailsDay">Día —</span>
@@ -433,7 +429,7 @@
     </section>
 
     <footer>
-      Diseñado para la comunidad de Anxan 💙
+      Diseñado para la comunidad de AnxanWoman 💙
     </footer>
   </main>
 
@@ -441,35 +437,36 @@
     // Año del calendario
     const YEAR = 2025;
 
-    // Configuración de cada día (puedes ajustar textos cuando quieras)
+    // Configuración de cada día.
+    // "stream" indica número de directo (1–11) según tu dibujo en rojo.
     const daysConfig = [
-      { day: 1, type: "Presentación", prize: "Sin premio económico", description: "Presentación del calendario, explicación de normas y primer reto suave con el chat." },
-      { day: 2, type: "Reto / contenido", prize: "Sin premio económico", description: "Mini reto Fortnite o dinámica de comunidad. El chat desbloquea qué se hará mañana." },
-      { day: 3, type: "Reto Fortnite", prize: "Premio pequeño (emote / 200–300 pavos)", description: "Reto en partida: si cumples el objetivo, sorteo pequeño entre el chat." },
-      { day: 4, type: "Guerra de outfits", prize: "Aparecer en un short / mención", description: "El chat ayuda a elegir los mejores outfits. El ganador aparece en un short o recibe mención especial." },
-      { day: 5, type: "Reto / clips", prize: "Sin premio económico", description: "Reacción a clips de la comunidad o reto divertido decidido por el chat." },
-      { day: 6, type: "Día chill / comunidad", prize: "Sin premio económico", description: "Encuestas, memes, juego rápido… día relajado sin premio, pero suma entradas al sorteo final." },
-      { day: 7, type: "Trivia + sorteo pequeño", prize: "Premio pequeño (2–3€)", description: "Trivia de Fortnite en directo. Los más rápidos entran en sorteo de un emote o premio peque." },
-      { day: 8, type: "Reto navideño", prize: "Sin premio económico", description: "Reto navideño en Fortnite (loot limitado, colores, etc.). El chat participa eligiendo reglas." },
-      { day: 9, type: "Skin misteriosa", prize: "Premio mediano (5–7€)", description: "Skin misteriosa revelada al final. Se sortea entre quienes cumplan el requisito del directo." },
-      { day: 10, type: "Fortnite pero…", prize: "Sin premio económico", description: "Formato \"Fortnite pero\" con reglas locas y entradas al sorteo final." },
-      { day: 11, type: "Reto / comunidad", prize: "Sin premio", description: "Dinámica con la comunidad: outfits, clips o votaciones. Suma hype para los siguientes días." },
-      { day: 12, type: "Trivia / evento", prize: "Premio pequeño opcional", description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas." },
-      { day: 13, type: "Reto Fortnite", prize: "Premio mediano (5–7€)", description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat." },
-      { day: 14, type: "Shoutouts", prize: "Shoutout / mención", description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales." },
-      { day: 15, type: "Clip challenge", prize: "Premio pequeño (emote / 200–300 pavos)", description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño." },
-      { day: 16, type: "Día chill", prize: "Sin premio", description: "Descanso relativo: charlas, encuestas, hype para lo que viene." },
-      { day: 17, type: "Pistas del premio final", prize: "Sin premio", description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas." },
-      { day: 18, type: "Reto navideño 2", prize: "Premio mediano opcional", description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja." },
-      { day: 19, type: "Trivia + sorteo", prize: "Premio pequeño", description: "Trivia rápida; quienes acierten entran en sorteo peque." },
-      { day: 20, type: "Mensaje navideño", prize: "Sin premio", description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora." },
-      { day: 21, type: "Sorteo pre-final", prize: "Premio mediano (5–7€)", description: "Sorteo importante antes del sprint final del calendario." },
-      { day: 22, type: "Reto 24h", prize: "Entrada al sorteo final", description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa." },
-      { day: 23, type: "PRE-GORDO", prize: "Premio ~10€ (skin grande)", description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad." },
-      { day: 24, type: "Día simbólico", prize: "Premio simbólico / mención", description: "Día más navideño, quizá con un regalito simbólico o mención especial." },
-      { day: 25, type: "Sorteo de Navidad", prize: "Premio pequeño o mediano", description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto." },
-      { day: 26, type: "Recap + hype", prize: "Sin premio económico", description: "Repaso de todo el calendario y hype máximo para las campanadas." },
-      { day: 27, type: "Campanadas + premio gordo", prize: "Premio gordo (20–25€)", description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025." }
+      { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario, explicación de normas y primer reto suave con el chat.",        stream: 1  },
+      { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto Fortnite o dinámica de comunidad. El chat desbloquea qué se hará mañana.",         stream: 2  },
+      { day: 3,  type: "Reto Fortnite",             prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Reto en partida: si cumples el objetivo, sorteo pequeño entre el chat.",                     stream: 3  },
+      { day: 4,  type: "Guerra de outfits",         prize: "Aparecer en un short / mención",              description: "El chat ayuda a elegir los mejores outfits. El ganador aparece en un short o recibe mención especial.", stream: 4  },
+      { day: 5,  type: "Reto / clips",              prize: "Sin premio económico",                        description: "Reacción a clips de la comunidad o reto divertido decidido por el chat.",                   stream: 5  },
+      { day: 6,  type: "Día chill / comunidad",     prize: "Sin premio económico",                        description: "Encuestas, memes, juego rápido… día relajado sin premio, pero suma entradas al sorteo final.", stream: 6  },
+      { day: 7,  type: "Trivia + sorteo pequeño",   prize: "Premio pequeño (2–3€)",                       description: "Trivia de Fortnite en directo. Los más rápidos entran en sorteo de un emote o premio peque.", stream: 7  },
+      { day: 8,  type: "Reto navideño",             prize: "Sin premio económico",                        description: "Reto navideño en Fortnite (loot limitado, colores, etc.). El chat participa eligiendo reglas.", stream: 8  },
+      { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa revelada al final. Se sortea entre quienes cumplan el requisito del directo.", stream: 9  },
+      { day: 10, type: "Fortnite pero…",            prize: "Sin premio económico",                        description: "Formato \"Fortnite pero\" con reglas locas y entradas al sorteo final.",                     stream: 10 },
+      { day: 11, type: "Reto / comunidad",          prize: "Sin premio",                                  description: "Dinámica con la comunidad: outfits, clips o votaciones. Suma hype para los siguientes días.", stream: 11 },
+      { day: 12, type: "Trivia / evento",           prize: "Premio pequeño opcional",                     description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas.",               stream: null },
+      { day: 13, type: "Reto Fortnite",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat.",                     stream: null },
+      { day: 14, type: "Shoutouts",                 prize: "Shoutout / mención",                          description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales.",              stream: null },
+      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño.",                   stream: null },
+      { day: 16, type: "Día chill",                 prize: "Sin premio",                                  description: "Descanso relativo: charlas, encuestas, hype para lo que viene.",                            stream: null },
+      { day: 17, type: "Pistas del premio final",   prize: "Sin premio",                                  description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas.",                  stream: null },
+      { day: 18, type: "Reto navideño 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja.",                    stream: null },
+      { day: 19, type: "Trivia + sorteo",           prize: "Premio pequeño",                              description: "Trivia rápida; quienes acierten entran en sorteo peque.",                                   stream: null },
+      { day: 20, type: "Mensaje navideño",          prize: "Sin premio",                                  description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora.",                     stream: null },
+      { day: 21, type: "Sorteo pre-final",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.",                                  stream: null },
+      { day: 22, type: "Reto 24h",                  prize: "Entrada al sorteo final",                     description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa.",    stream: null },
+      { day: 23, type: "PRE-GORDO",                 prize: "Premio ~10€ (skin grande)",                   description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad.",                           stream: null },
+      { day: 24, type: "Día simbólico",             prize: "Premio simbólico / mención",                  description: "Día más navideño, quizá con un regalito simbólico o mención especial.",                     stream: null },
+      { day: 25, type: "Sorteo de Navidad",         prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto.",                          stream: null },
+      { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Repaso de todo el calendario y hype máximo para las campanadas.",                           stream: null },
+      { day: 27, type: "Campanadas + premio gordo", prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025.",    stream: null }
     ];
 
     const calendarGrid = document.getElementById("calendarGrid");
@@ -482,7 +479,7 @@
     const detailsPrize = document.getElementById("detailsPrize");
     const detailsDescription = document.getElementById("detailsDescription");
 
-    // --- FECHA ACTUAL ---
+    // Fecha actual (solo para mostrar "Hoy", no para bloquear)
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -494,25 +491,21 @@
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
     function createDayCard(config) {
-      const { day, type, prize, description } = config;
+      const { day, type, prize, description, stream } = config;
       const date = new Date(YEAR, 11, day); // mes 11 = diciembre
 
-      // MODO NORMAL (bloqueo por fecha):
-      const isUnlocked = date <= today;
+      // 🔓 MODO PRUEBA: todo desbloqueado
+      const isUnlocked = true;
 
-      const card = document.createElement("button");
-      card.className = "day";
-      if (!isUnlocked) card.classList.add("locked");
-      else card.classList.add("unlocked");
-
-      // Marcar día actual en diciembre
-      if (
+      // Para resaltar el día actual cuando sea diciembre
+      const isToday =
         today.getFullYear() === YEAR &&
         today.getMonth() === 11 &&
-        today.getDate() === day
-      ) {
-        card.classList.add("today");
-      }
+        today.getDate() === day;
+
+      const card = document.createElement("button");
+      card.className = "day unlocked";
+      if (isToday) card.classList.add("today");
 
       card.dataset.day = day;
       card.dataset.type = type;
@@ -521,30 +514,24 @@
 
       card.innerHTML = `
         <div class="day-number">Día ${day}</div>
-        <div class="day-label">${type}</div>
-        <div class="day-tag">${isUnlocked ? "Disponible" : "Bloqueado"}</div>
+        <div class="day-label-line">
+          <span class="day-label">${type}</span>
+          ${stream ? `<span class="day-stream">Directo #${stream}</span>` : ""}
+        </div>
+        <div class="day-tag">Disponible</div>
       `;
 
       card.addEventListener("click", () => {
-        if (!isUnlocked) {
-          detailsTitle.textContent = `Día ${day} bloqueado`;
-          detailsStatus.textContent = "Bloqueado";
-          detailsStatus.classList.remove("unlocked");
-          detailsStatus.classList.add("locked");
-          detailsDay.textContent = `Día ${day}`;
-          detailsType.textContent = `Tipo: ${type}`;
-          detailsPrize.textContent = "Premio: —";
-          detailsDescription.textContent =
-            "Esta casilla todavía está bloqueada. Solo se podrá abrir a partir de su día durante el calendario.";
-          return;
-        }
-
-        detailsTitle.textContent = `Día ${day} · ${type}`;
+        detailsTitle.textContent = stream
+          ? `Día ${day} · ${type} · Directo #${stream}`
+          : `Día ${day} · ${type}`;
         detailsStatus.textContent = "Desbloqueado";
         detailsStatus.classList.remove("locked");
         detailsStatus.classList.add("unlocked");
         detailsDay.textContent = `Día ${day}`;
-        detailsType.textContent = `Tipo: ${type}`;
+        detailsType.textContent = stream
+          ? `Tipo: ${type} · Directo #${stream}`
+          : `Tipo: ${type}`;
         detailsPrize.textContent = `Premio: ${prize}`;
         detailsDescription.textContent = description;
       });
