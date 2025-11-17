@@ -31,4 +31,531 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family:
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 45%),
+        radial-gradient(circle at 100% 0%, #f97316 0, transparent 45%),
+        radial-gradient(circle at 0% 100%, #22c55e 0, transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1160px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+      border-radius: 28px;
+      padding: 26px 26px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow:
+        0 0 40px rgba(15, 23, 42, 0.9),
+        0 0 80px rgba(96, 165, 250, 0.13);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image:
+        radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.18) 0, transparent 50%),
+        radial-gradient(circle at 90% 0%, rgba(251, 113, 133, 0.25) 0, transparent 55%);
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 0 18px rgba(96, 165, 250, 0.5);
+    }
+
+    h1 span.emoji {
+      font-size: 1.9rem;
+      filter: drop-shadow(0 0 6px rgba(250, 250, 250, 0.6));
+    }
+
+    .subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.96));
+      backdrop-filter: blur(12px);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 3fr);
+      gap: 22px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .calendar {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .today-label {
+      font-size: 0.8rem;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .day {
+      position: relative;
+      border-radius: 18px;
+      padding: 10px;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248, 113, 113, 0.18), transparent 65%),
+        linear-gradient(145deg, #020617, #020617);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      transition:
+        transform 0.12s ease-out,
+        box-shadow 0.12s ease-out,
+        border-color 0.12s ease-out,
+        background 0.12s ease-out,
+        opacity 0.12s;
+      font-size: 0.82rem;
+    }
+
+    .day::before {
+      content: "❄";
+      position: absolute;
+      font-size: 1.4rem;
+      right: 6px;
+      top: 4px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .day:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow:
+        0 10px 26px rgba(15, 23, 42, 0.9),
+        0 0 18px rgba(96, 165, 250, 0.35);
+      border-color: rgba(96, 165, 250, 0.9);
+      background:
+        radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248, 113, 113, 0.28), transparent 65%),
+        linear-gradient(145deg, #020617, #020617);
+    }
+
+    .day.locked {
+      cursor: default;
+      opacity: 0.55;
+      border-style: dashed;
+      border-color: rgba(75, 85, 99, 0.8);
+      background: linear-gradient(145deg, #020617, #020617);
+      box-shadow: none;
+    }
+
+    .day.locked::before {
+      content: "🔒";
+      font-size: 1.1rem;
+      opacity: 0.2;
+    }
+
+    .day.locked:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: rgba(75, 85, 99, 0.8);
+    }
+
+    .day-number {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .day-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .day-tag {
+      font-size: 0.68rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      align-self: flex-start;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      color: var(--muted);
+    }
+
+    .day.unlocked .day-tag {
+      background: var(--accent-soft);
+      border-color: rgba(96, 165, 250, 0.95);
+      color: var(--accent);
+    }
+
+    .day.today {
+      box-shadow:
+        0 0 0 1px rgba(96, 165, 250, 1),
+        0 0 22px rgba(96, 165, 250, 0.65);
+      border-color: rgba(96, 165, 250, 1);
+    }
+
+    .day.today::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(96, 165, 250, 0.18), transparent);
+      pointer-events: none;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .hint strong {
+      color: var(--accent-2);
+    }
+
+    .details {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 14px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .details-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .details-title h2 {
+      font-size: 1.1rem;
+    }
+
+    .details-status {
+      font-size: 0.78rem;
+      padding: 5px 9px;
+      border-radius: 999px;
+    }
+
+    .details-status.unlocked {
+      background: rgba(22, 163, 74, 0.16);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.9);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+
+    .details-status.locked {
+      background: rgba(31, 41, 55, 0.9);
+      color: var(--muted);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+    }
+
+    .details-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .details-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    .details-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.7);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="title-block">
+        <h1>
+          <span class="emoji">🎄</span>
+          Calendario de Adviento · Anxan
+        </h1>
+        <p class="subtitle">
+          El chat elige la casilla al final del directo para desbloquear el contenido del siguiente día.
+        </p>
+      </div>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Temporada 2025 · Especial Fortnite
+      </div>
+    </header>
+
+    <section class="layout">
+      <!-- Calendario -->
+      <section class="calendar">
+        <div class="calendar-header">
+          <span>Días 1–27 diciembre</span>
+          <span class="today-label" id="todayLabel">Hoy: —</span>
+        </div>
+        <div class="grid" id="calendarGrid">
+          <!-- Las casillas se crean con JavaScript -->
+        </div>
+        <p class="hint">
+          Las casillas futuras aparecen <strong>bloqueadas</strong>. Solo se pueden abrir a partir de su día.
+        </p>
+      </section>
+
+      <!-- Panel de detalles -->
+      <section class="details" id="detailsPanel">
+        <div class="details-title">
+          <h2 id="detailsTitle">Selecciona una casilla</h2>
+          <span class="details-status locked" id="detailsStatus">Bloqueado</span>
+        </div>
+        <div class="details-meta">
+          <span class="pill" id="detailsDay">Día —</span>
+          <span class="pill" id="detailsType">Tipo: —</span>
+          <span class="pill" id="detailsPrize">Premio: —</span>
+        </div>
+        <p class="details-description" id="detailsDescription">
+          Haz clic en una casilla del calendario para ver qué reto, evento o premio se desbloquea ese día.
+        </p>
+        <p class="details-note">
+          Tip: durante el directo, deja que el chat elija el número de casilla y ábrela en esta página en directo.
+        </p>
+      </section>
+    </section>
+
+    <footer>
+      Diseñado para la comunidad de Anxan 💙
+    </footer>
+  </main>
+
+  <script>
+    // Año del calendario
+    const YEAR = 2025;
+
+    // Configuración de cada día (puedes ajustar textos cuando quieras)
+    const daysConfig = [
+      { day: 1, type: "Presentación", prize: "Sin premio económico", description: "Presentación del calendario, explicación de normas y primer reto suave con el chat." },
+      { day: 2, type: "Reto / contenido", prize: "Sin premio económico", description: "Mini reto Fortnite o dinámica de comunidad. El chat desbloquea qué se hará mañana." },
+      { day: 3, type: "Reto Fortnite", prize: "Premio pequeño (emote / 200–300 pavos)", description: "Reto en partida: si cumples el objetivo, sorteo pequeño entre el chat." },
+      { day: 4, type: "Guerra de outfits", prize: "Aparecer en un short / mención", description: "El chat ayuda a elegir los mejores outfits. El ganador aparece en un short o recibe mención especial." },
+      { day: 5, type: "Reto / clips", prize: "Sin premio económico", description: "Reacción a clips de la comunidad o reto divertido decidido por el chat." },
+      { day: 6, type: "Día chill / comunidad", prize: "Sin premio económico", description: "Encuestas, memes, juego rápido… día relajado sin premio, pero suma entradas al sorteo final." },
+      { day: 7, type: "Trivia + sorteo pequeño", prize: "Premio pequeño (2–3€)", description: "Trivia de Fortnite en directo. Los más rápidos entran en sorteo de un emote o premio peque." },
+      { day: 8, type: "Reto navideño", prize: "Sin premio económico", description: "Reto navideño en Fortnite (loot limitado, colores, etc.). El chat participa eligiendo reglas." },
+      { day: 9, type: "Skin misteriosa", prize: "Premio mediano (5–7€)", description: "Skin misteriosa revelada al final. Se sortea entre quienes cumplan el requisito del directo." },
+      { day: 10, type: "Fortnite pero…", prize: "Sin premio económico", description: "Formato \"Fortnite pero\" con reglas locas y entradas al sorteo final." },
+      { day: 11, type: "Reto / comunidad", prize: "Sin premio", description: "Dinámica con la comunidad: outfits, clips o votaciones. Suma hype para los siguientes días." },
+      { day: 12, type: "Trivia / evento", prize: "Premio pequeño opcional", description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas." },
+      { day: 13, type: "Reto Fortnite", prize: "Premio mediano (5–7€)", description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat." },
+      { day: 14, type: "Shoutouts", prize: "Shoutout / mención", description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales." },
+      { day: 15, type: "Clip challenge", prize: "Premio pequeño (emote / 200–300 pavos)", description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño." },
+      { day: 16, type: "Día chill", prize: "Sin premio", description: "Descanso relativo: charlas, encuestas, hype para lo que viene." },
+      { day: 17, type: "Pistas del premio final", prize: "Sin premio", description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas." },
+      { day: 18, type: "Reto navideño 2", prize: "Premio mediano opcional", description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja." },
+      { day: 19, type: "Trivia + sorteo", prize: "Premio pequeño", description: "Trivia rápida; quienes acierten entran en sorteo peque." },
+      { day: 20, type: "Mensaje navideño", prize: "Sin premio", description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora." },
+      { day: 21, type: "Sorteo pre-final", prize: "Premio mediano (5–7€)", description: "Sorteo importante antes del sprint final del calendario." },
+      { day: 22, type: "Reto 24h", prize: "Entrada al sorteo final", description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa." },
+      { day: 23, type: "PRE-GORDO", prize: "Premio ~10€ (skin grande)", description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad." },
+      { day: 24, type: "Día simbólico", prize: "Premio simbólico / mención", description: "Día más navideño, quizá con un regalito simbólico o mención especial." },
+      { day: 25, type: "Sorteo de Navidad", prize: "Premio pequeño o mediano", description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto." },
+      { day: 26, type: "Recap + hype", prize: "Sin premio económico", description: "Repaso de todo el calendario y hype máximo para las campanadas." },
+      { day: 27, type: "Campanadas + premio gordo", prize: "Premio gordo (20–25€)", description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025." }
+    ];
+
+    const calendarGrid = document.getElementById("calendarGrid");
+    const todayLabel = document.getElementById("todayLabel");
+
+    const detailsTitle = document.getElementById("detailsTitle");
+    const detailsStatus = document.getElementById("detailsStatus");
+    const detailsDay = document.getElementById("detailsDay");
+    const detailsType = document.getElementById("detailsType");
+    const detailsPrize = document.getElementById("detailsPrize");
+    const detailsDescription = document.getElementById("detailsDescription");
+
+    // --- FECHA ACTUAL ---
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const formatter = new Intl.DateTimeFormat("es-ES", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+    todayLabel.textContent = "Hoy: " + formatter.format(now);
+
+    function createDayCard(config) {
+      const { day, type, prize, description } = config;
+      const date = new Date(YEAR, 11, day); // mes 11 = diciembre
+
+      // MODO NORMAL (bloqueo por fecha):
+      const isUnlocked = date <= today;
+
+      const card = document.createElement("button");
+      card.className = "day";
+      if (!isUnlocked) card.classList.add("locked");
+      else card.classList.add("unlocked");
+
+      // Marcar día actual en diciembre
+      if (
+        today.getFullYear() === YEAR &&
+        today.getMonth() === 11 &&
+        today.getDate() === day
+      ) {
+        card.classList.add("today");
+      }
+
+      card.dataset.day = day;
+      card.dataset.type = type;
+      card.dataset.prize = prize;
+      card.dataset.description = description;
+
+      card.innerHTML = `
+        <div class="day-number">Día ${day}</div>
+        <div class="day-label">${type}</div>
+        <div class="day-tag">${isUnlocked ? "Disponible" : "Bloqueado"}</div>
+      `;
+
+      card.addEventListener("click", () => {
+        if (!isUnlocked) {
+          detailsTitle.textContent = `Día ${day} bloqueado`;
+          detailsStatus.textContent = "Bloqueado";
+          detailsStatus.classList.remove("unlocked");
+          detailsStatus.classList.add("locked");
+          detailsDay.textContent = `Día ${day}`;
+          detailsType.textContent = `Tipo: ${type}`;
+          detailsPrize.textContent = "Premio: —";
+          detailsDescription.textContent =
+            "Esta casilla todavía está bloqueada. Solo se podrá abrir a partir de su día durante el calendario.";
+          return;
+        }
+
+        detailsTitle.textContent = `Día ${day} · ${type}`;
+        detailsStatus.textContent = "Desbloqueado";
+        detailsStatus.classList.remove("locked");
+        detailsStatus.classList.add("unlocked");
+        detailsDay.textContent = `Día ${day}`;
+        detailsType.textContent = `Tipo: ${type}`;
+        detailsPrize.textContent = `Premio: ${prize}`;
+        detailsDescription.textContent = description;
+      });
+
+      return card;
+    }
+
+    // Pintar los días 1–27
+    daysConfig.forEach((config) => {
+      calendarGrid.appendChild(createDayCard(config));
+    });
+  </script>
+</body>
+</html>
