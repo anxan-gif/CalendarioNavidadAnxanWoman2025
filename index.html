@@ -15,12 +15,13 @@
       --bg-1: #040014;
       --bg-2: #0b1024;
       --bg-3: #120c2c;
+      --card: rgba(10, 15, 40, 0.96);
       --accent: #60a5ff;
       --accent-2: #f97316;
       --accent-soft: rgba(96, 165, 255, 0.18);
       --text: #f9fafb;
       --muted: #9ca3af;
-      --radius-lg: 24px;
+      --radius-lg: 22px;
     }
 
     * {
@@ -41,16 +42,15 @@
       color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: center;
       padding: 24px;
     }
 
     .app {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1160px;
       background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
-      border-radius: 32px;
-      padding: 24px 20px 20px;
+      border-radius: 28px;
+      padding: 26px 26px 20px;
       border: 1px solid rgba(148, 163, 184, 0.35);
       box-shadow:
         0 0 40px rgba(15, 23, 42, 0.9),
@@ -74,10 +74,10 @@
     header {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 18px;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     .title-block {
@@ -87,7 +87,7 @@
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       letter-spacing: 0.05em;
       display: flex;
       align-items: center;
@@ -101,12 +101,12 @@
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--muted);
     }
 
     .badge {
-      padding: 6px 11px;
+      padding: 7px 12px;
       border-radius: 999px;
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -127,6 +127,26 @@
       box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
     }
 
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 3fr);
+      gap: 22px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .calendar {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
+    }
+
     .calendar-header {
       display: flex;
       justify-content: space-between;
@@ -134,32 +154,23 @@
       margin-bottom: 14px;
       font-size: 0.85rem;
       color: var(--muted);
-      padding: 0 4px;
     }
 
     .today-label {
       font-size: 0.8rem;
-      padding: 4px 8px;
+      padding: 5px 9px;
       border-radius: 999px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(75, 85, 99, 0.9);
     }
 
-    .calendar {
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 600px) {
       .grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
@@ -167,12 +178,12 @@
 
     .day {
       position: relative;
-      border-radius: 22px;
+      border-radius: 20px;
       padding: 10px;
       aspect-ratio: 1 / 1;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-between;
       cursor: pointer;
       overflow: hidden;
       background:
@@ -184,54 +195,164 @@
         transform 0.12s ease-out,
         box-shadow 0.12s ease-out,
         border-color 0.12s ease-out,
-        background 0.12s ease-out,
-        opacity 0.12s;
+        background 0.12s ease-out;
+      font-size: 0.88rem;
     }
 
     .day::before {
-      content: "";
+      content: "❄";
       position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 15% 10%, rgba(148, 163, 184, 0.18), transparent 60%);
-      opacity: 0.8;
+      font-size: 1.6rem;
+      right: 6px;
+      top: 4px;
+      opacity: 0.12;
       pointer-events: none;
     }
 
-    .day-number-center {
-      position: relative;
-      font-size: 2rem;
+    .day:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow:
+        0 10px 26px rgba(15, 23, 42, 0.9),
+        0 0 18px rgba(96, 165, 250, 0.35);
+      border-color: rgba(96, 165, 250, 0.9);
+      background:
+        radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(248, 113, 113, 0.28), transparent 65%),
+        linear-gradient(145deg, #020617, #020617);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .day-number-label {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .day-type {
+      max-width: 60%;
+      text-align: right;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      opacity: 0.85;
+    }
+
+    .day-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-stream-number {
+      font-size: 1.9rem;
       font-weight: 800;
       color: #ffffff;
       text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.9),
-        0 0 22px rgba(96, 165, 250, 0.9);
+        0 0 12px rgba(255, 255, 255, 0.9),
+        0 0 24px rgba(96, 165, 250, 0.9);
     }
 
-    .day:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow:
-        0 14px 30px rgba(15, 23, 42, 0.9),
-        0 0 20px rgba(96, 165, 250, 0.38);
-      border-color: rgba(96, 165, 250, 0.95);
-    }
-
-    .day.opened {
-      opacity: 0.72;
-      border-color: rgba(250, 204, 21, 0.9);
-      box-shadow:
-        0 0 0 1px rgba(250, 204, 21, 0.7),
-        0 0 18px rgba(250, 204, 21, 0.4);
+    .day-tag {
+      font-size: 0.65rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      align-self: flex-start;
+      background: var(--accent-soft);
+      border: 1px solid rgba(96, 165, 250, 0.95);
+      color: var(--accent);
     }
 
     .hint {
       font-size: 0.8rem;
-      margin-top: 10px;
+      margin-top: 8px;
       color: var(--muted);
-      padding: 0 4px;
     }
 
     .hint strong {
       color: var(--accent-2);
+    }
+
+    .details {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 14px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .details[data-has-selection="false"] .details-title,
+    .details[data-has-selection="false"] .details-meta,
+    .details[data-has-selection="false"] .details-description,
+    .details[data-has-selection="false"] .details-note {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .details[data-has-selection="false"] {
+      border-style: dashed;
+      border-color: rgba(75, 85, 99, 0.8);
+    }
+
+    .details-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .details-title h2 {
+      font-size: 1.1rem;
+    }
+
+    .details-status {
+      font-size: 0.78rem;
+      padding: 5px 9px;
+      border-radius: 999px;
+    }
+
+    .details-status.unlocked {
+      background: rgba(22, 163, 74, 0.16);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.9);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+
+    .details-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .details-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    .details-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
     }
 
     footer {
@@ -239,90 +360,104 @@
       font-size: 0.75rem;
       color: rgba(148, 163, 184, 0.7);
       text-align: right;
-      padding-right: 4px;
     }
 
-    /* -------- MODAL -------- */
+    /* ---------- INTRO OVERLAY (portada) ---------- */
 
-    .modal-backdrop {
+    .intro-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.85);
-      display: none;
+      background:
+        radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #f97316 0, transparent 55%),
+        #020617;
+      display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 40;
-      padding: 16px;
+      z-index: 50;
+      cursor: pointer;
+      animation: fadeIn 0.5s ease-out forwards;
     }
 
-    .modal-backdrop.visible {
-      display: flex;
-      animation: fadeIn 0.25s ease-out forwards;
-    }
-
-    .modal {
-      width: 100%;
-      max-width: 520px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-      border-radius: 22px;
-      padding: 18px 18px 16px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
+    .intro-inner {
+      width: min(900px, 96vw);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+      border-radius: 28px;
+      padding: 22px 20px 16px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
       box-shadow:
-        0 24px 70px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(96, 165, 250, 0.4);
-      transform: translateY(10px) scale(0.97);
-      opacity: 0;
-      animation: popModal 0.22s ease-out forwards;
+        0 0 40px rgba(15, 23, 42, 0.9),
+        0 0 80px rgba(96, 165, 250, 0.35);
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+    .intro-title {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .intro-title h2 {
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(96, 165, 250, 0.8);
+    }
+
+    .intro-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .intro-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 8px;
     }
 
-    .modal-title {
-      font-size: 1.15rem;
+    @media (max-width: 650px) {
+      .intro-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
 
-    .modal-status {
-      font-size: 0.78rem;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(22, 163, 74, 0.18);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.9);
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-      white-space: nowrap;
-    }
-
-    .modal-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .pill {
-      padding: 3px 9px;
-      border-radius: 999px;
+    .intro-day {
+      border-radius: 18px;
+      aspect-ratio: 1 / 1;
       border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.88);
+      background:
+        radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.24), transparent 60%),
+        linear-gradient(145deg, #020617, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(96, 165, 250, 0.9);
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+      animation: popIn 0.6s ease-out forwards;
+      animation-delay: calc(var(--i) * 0.04s);
     }
 
-    .modal-body {
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .modal-note {
-      font-size: 0.78rem;
+    .intro-hint {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.85rem;
       color: var(--muted);
-      margin-top: 8px;
+    }
+
+    .intro-hint span {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .intro-overlay.hidden {
+      animation: fadeOut 0.35s ease-in forwards;
+      pointer-events: none;
     }
 
     @keyframes fadeIn {
@@ -330,13 +465,34 @@
       to { opacity: 1; }
     }
 
-    @keyframes popModal {
-      0% { opacity: 0; transform: translateY(10px) scale(0.97); }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(10px) scale(0.96); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
   </style>
 </head>
 <body>
+  <!-- Portada animada -->
+  <div class="intro-overlay" id="introOverlay">
+    <div class="intro-inner">
+      <div class="intro-title">
+        <h2>CALENDARIO DE ADVIENTO · ANXANWOMAN</h2>
+        <p class="intro-sub">Haz clic en cualquier parte para empezar</p>
+      </div>
+      <div class="intro-grid" id="introGrid">
+        <!-- Se rellena con números 1–27 desde JS -->
+      </div>
+      <p class="intro-hint">
+        <span>Click</span> para abrir la interfaz del calendario.
+      </p>
+    </div>
+  </div>
+
   <main class="app">
     <header>
       <div class="title-block">
@@ -345,7 +501,7 @@
           Calendario de Adviento · AnxanWoman
         </h1>
         <p class="subtitle">
-          Haz clic en una casilla para ver qué reto, evento o premio toca ese día.
+          El chat elige la casilla al final del directo para desbloquear el contenido del siguiente día.
         </p>
       </div>
       <div class="badge">
@@ -354,17 +510,39 @@
       </div>
     </header>
 
-    <section class="calendar">
-      <div class="calendar-header">
-        <span>Días 1–27 diciembre</span>
-        <span class="today-label" id="todayLabel">Hoy: —</span>
-      </div>
-      <div class="grid" id="calendarGrid">
-        <!-- casillas -->
-      </div>
-      <p class="hint">
-        Las casillas que ya se han abierto aparecerán con un borde dorado. <strong>Solo abre la que elija el chat</strong> en cada directo.
-      </p>
+    <section class="layout">
+      <!-- Calendario -->
+      <section class="calendar">
+        <div class="calendar-header">
+          <span>Días 1–27 diciembre</span>
+          <span class="today-label" id="todayLabel">Hoy: —</span>
+        </div>
+        <div class="grid" id="calendarGrid">
+          <!-- Las casillas se crean con JavaScript -->
+        </div>
+        <p class="hint">
+          Todas las casillas están <strong>desbloqueadas</strong> en modo prueba. En directo abre solo la que elija el chat.
+        </p>
+      </section>
+
+      <!-- Panel de detalles -->
+      <section class="details" id="detailsPanel" data-has-selection="false">
+        <div class="details-title">
+          <h2 id="detailsTitle">Selecciona una casilla</h2>
+          <span class="details-status unlocked" id="detailsStatus">Desbloqueado</span>
+        </div>
+        <div class="details-meta">
+          <span class="pill" id="detailsDay">Día —</span>
+          <span class="pill" id="detailsType">Tipo: —</span>
+          <span class="pill" id="detailsPrize">Premio: —</span>
+        </div>
+        <p class="details-description" id="detailsDescription">
+          …
+        </p>
+        <p class="details-note">
+          Tip: deja que el chat elija el número de casilla y ábrela en esta página en directo.
+        </p>
+      </section>
     </section>
 
     <footer>
@@ -372,31 +550,10 @@
     </footer>
   </main>
 
-  <!-- MODAL -->
-  <div class="modal-backdrop" id="modalBackdrop">
-    <div class="modal" id="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle">Día X</h2>
-        <span class="modal-status">Desbloqueado</span>
-      </div>
-      <div class="modal-meta">
-        <span class="pill" id="modalDay">Día —</span>
-        <span class="pill" id="modalType">Tipo: —</span>
-        <span class="pill" id="modalPrize">Premio: —</span>
-      </div>
-      <div class="modal-body" id="modalDescription">
-        …
-      </div>
-      <p class="modal-note">
-        Cierra haciendo clic fuera de esta tarjeta para volver al calendario.
-      </p>
-    </div>
-  </div>
-
   <script>
     const YEAR = 2025;
 
-    // CONFIG: qué pasa cada día
+    // Configuración de días (igual que antes)
     const daysConfig = [
       { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario, explicación de normas y primer reto suave con el chat.",        stream: 1  },
       { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto Fortnite o dinámica de comunidad. El chat desbloquea qué se hará mañana.",         stream: 2  },
@@ -409,36 +566,38 @@
       { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa revelada al final. Se sortea entre quienes cumplan el requisito del directo.", stream: 9  },
       { day: 10, type: "Fortnite pero…",            prize: "Sin premio económico",                        description: "Formato \"Fortnite pero\" con reglas locas y entradas al sorteo final.",                     stream: 10 },
       { day: 11, type: "Reto / comunidad",          prize: "Sin premio",                                  description: "Dinámica con la comunidad: outfits, clips o votaciones. Suma hype para los siguientes días.", stream: 11 },
-      { day: 12, type: "Trivia",                    prize: "Premio pequeño opcional",                     description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas.",               stream: null },
-      { day: 13, type: "Reto Fortnite",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat.",                     stream: null },
-      { day: 14, type: "Shoutouts",                 prize: "Shoutout / mención",                          description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales.",              stream: null },
-      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño.",                   stream: null },
-      { day: 16, type: "Día chill",                 prize: "Sin premio",                                  description: "Descanso relativo: charlas, encuestas, hype para lo que viene.",                            stream: null },
-      { day: 17, type: "Pistas premio final",       prize: "Sin premio",                                  description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas.",                  stream: null },
-      { day: 18, type: "Reto navideño 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja.",                    stream: null },
-      { day: 19, type: "Trivia + sorteo",           prize: "Premio pequeño",                              description: "Trivia rápida; quienes acierten entran en sorteo peque.",                                   stream: null },
-      { day: 20, type: "Mensaje navideño",          prize: "Sin premio",                                  description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora.",                     stream: null },
-      { day: 21, type: "Sorteo pre-final",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.",                                  stream: null },
-      { day: 22, type: "Reto 24h",                  prize: "Entrada al sorteo final",                     description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa.",    stream: null },
-      { day: 23, type: "Pre-gordo",                 prize: "Premio ~10€ (skin grande)",                   description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad.",                           stream: null },
-      { day: 24, type: "Día simbólico",             prize: "Premio simbólico / mención",                  description: "Día más navideño, quizá con un regalito simbólico o mención especial.",                     stream: null },
-      { day: 25, type: "Sorteo Navidad",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto.",                          stream: null },
-      { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Repaso de todo el calendario y hype máximo para las campanadas.",                           stream: null },
-      { day: 27, type: "Campanadas",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025.",    stream: null }
+      { day: 12, type: "TRIVIA",                    prize: "Premio pequeño opcional",                     description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas.",               stream: null },
+      { day: 13, type: "RETO FORTNITE",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat.",                     stream: null },
+      { day: 14, type: "SHOUTOUTS",                 prize: "Shoutout / mención",                          description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales.",              stream: null },
+      { day: 15, type: "CLIP CHALLENGE",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño.",                   stream: null },
+      { day: 16, type: "DÍA CHILL",                 prize: "Sin premio",                                  description: "Descanso relativo: charlas, encuestas, hype para lo que viene.",                            stream: null },
+      { day: 17, type: "PISTAS PREMIO",             prize: "Sin premio",                                  description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas.",                  stream: null },
+      { day: 18, type: "RETO NAVIDEÑO 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja.",                    stream: null },
+      { day: 19, type: "TRIVIA + SORTEO",           prize: "Premio pequeño",                              description: "Trivia rápida; quienes acierten entran en sorteo peque.",                                   stream: null },
+      { day: 20, type: "MENSAJE NAVIDEÑO",          prize: "Sin premio",                                  description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora.",                     stream: null },
+      { day: 21, type: "SORTEO PRE-FINAL",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.",                                  stream: null },
+      { day: 22, type: "RETO 24H",                  prize: "Entrada al sorteo final",                     description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa.",    stream: null },
+      { day: 23, type: "PRE-GORDO",                 prize: "Premio ~10€ (skin grande)",                   description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad.",                           stream: null },
+      { day: 24, type: "DÍA SIMBÓLICO",             prize: "Premio simbólico / mención",                  description: "Día más navideño, quizá con un regalito simbólico o mención especial.",                     stream: null },
+      { day: 25, type: "SORTEO NAVIDAD",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto.",                          stream: null },
+      { day: 26, type: "RECAP + HYPE",              prize: "Sin premio económico",                        description: "Repaso de todo el calendario y hype máximo para las campanadas.",                           stream: null },
+      { day: 27, type: "CAMPANADAS",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025.",    stream: null }
     ];
 
     const calendarGrid = document.getElementById("calendarGrid");
     const todayLabel = document.getElementById("todayLabel");
+    const detailsPanel = document.getElementById("detailsPanel");
 
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalDay = document.getElementById("modalDay");
-    const modalType = document.getElementById("modalType");
-    const modalPrize = document.getElementById("modalPrize");
-    const modalDescription = document.getElementById("modalDescription");
+    const detailsTitle = document.getElementById("detailsTitle");
+    const detailsStatus = document.getElementById("detailsStatus");
+    const detailsDay = document.getElementById("detailsDay");
+    const detailsType = document.getElementById("detailsType");
+    const detailsPrize = document.getElementById("detailsPrize");
+    const detailsDescription = document.getElementById("detailsDescription");
 
-    // Mostrar fecha actual
+    // Fecha actual solo para mostrar "Hoy"
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const formatter = new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
       month: "short",
@@ -446,61 +605,74 @@
     });
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
-    // Guardar casillas abiertas en localStorage
-    const OPEN_KEY = "anxanwoman_calendario_opened_v1";
-    const openedSet = new Set(
-      JSON.parse(localStorage.getItem(OPEN_KEY) || "[]")
-    );
-
-    function saveOpened() {
-      localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
-    }
-
-    function openModalForDay(config) {
-      const { day, type, prize, description, stream } = config;
-      modalTitle.textContent = stream
-        ? `Día ${day} · ${type} · ${stream ? "Directo #" + stream : ""}`
-        : `Día ${day} · ${type}`;
-      modalDay.textContent = `Día ${day}`;
-      modalType.textContent = stream
-        ? `Tipo: ${type} · ${stream ? "Directo #" + stream : ""}`
-        : `Tipo: ${type}`;
-      modalPrize.textContent = `Premio: ${prize}`;
-      modalDescription.textContent = description;
-
-      modalBackdrop.classList.add("visible");
-    }
-
     function createDayCard(config) {
+      const { day, type, prize, description, stream } = config;
+
       const card = document.createElement("button");
       card.className = "day";
-      if (openedSet.has(config.day)) {
-        card.classList.add("opened");
-      }
 
-      card.innerHTML = `<span class="day-number-center">${config.day}</span>`;
+      const isToday =
+        today.getFullYear() === YEAR &&
+        today.getMonth() === 11 &&
+        today.getDate() === day;
 
-      card.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openedSet.add(config.day);
-        saveOpened();
-        card.classList.add("opened");
-        openModalForDay(config);
+      if (isToday) card.classList.add("today");
+
+      card.innerHTML = `
+        <div class="day-header">
+          <span class="day-number-label">Día ${day}</span>
+          <span class="day-type">${type}</span>
+        </div>
+        <div class="day-center">
+          ${stream ? `<span class="day-stream-number">${stream}</span>` : ""}
+        </div>
+        <div class="day-tag">Disponible</div>
+      `;
+
+      card.addEventListener("click", () => {
+        detailsPanel.setAttribute("data-has-selection", "true");
+        detailsTitle.textContent = stream
+          ? `Día ${day} · ${type} · Directo ${stream ? "#" + stream : ""}`
+          : `Día ${day} · ${type}`;
+        detailsStatus.textContent = "Desbloqueado";
+        detailsStatus.classList.add("unlocked");
+        detailsDay.textContent = `Día ${day}`;
+        detailsType.textContent = stream
+          ? `Tipo: ${type} · ${stream ? "Directo #" + stream : ""}`
+          : `Tipo: ${type}`;
+        detailsPrize.textContent = `Premio: ${prize}`;
+        detailsDescription.textContent = description;
       });
 
       return card;
     }
 
-    daysConfig.forEach(cfg => {
-      calendarGrid.appendChild(createDayCard(cfg));
+    // Pintar días
+    daysConfig.forEach((config) => {
+      calendarGrid.appendChild(createDayCard(config));
     });
 
-    // Cerrar modal clicando fuera de la tarjeta
-    modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) {
-        modalBackdrop.classList.remove("visible");
-      }
+    // -------- Intro overlay lógica --------
+    const introOverlay = document.getElementById("introOverlay");
+    const introGrid = document.getElementById("introGrid");
+
+    // Rellenar cuadritos 1–27
+    daysConfig.forEach((cfg, index) => {
+      const d = document.createElement("div");
+      d.className = "intro-day";
+      d.textContent = cfg.day;
+      d.style.setProperty("--i", index.toString());
+      introGrid.appendChild(d);
+    });
+
+    // Ocultar overlay al hacer click en cualquier sitio de la portada
+    introOverlay.addEventListener("click", () => {
+      introOverlay.classList.add("hidden");
+      setTimeout(() => {
+        introOverlay.style.display = "none";
+      }, 350);
     });
   </script>
 </body>
 </html>
+
