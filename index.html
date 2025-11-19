@@ -48,6 +48,10 @@
       padding: 24px;
     }
 
+    body.xmas-on {
+      cursor: default;
+    }
+
     .app {
       width: 100%;
       max-width: 1100px;
@@ -74,7 +78,7 @@
       z-index: -2;
     }
 
-    /* Iconos Fortnite estilo emoji */
+    /* Iconos Fortnite estilo emoji de fondo */
     .fn-icon {
       position: absolute;
       font-size: 5.5rem;
@@ -101,6 +105,12 @@
       gap: 4px;
     }
 
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     h1 {
       font-size: 1.8rem;
       letter-spacing: 0.05em;
@@ -118,6 +128,17 @@
     .subtitle {
       font-size: 0.9rem;
       color: var(--muted);
+    }
+
+    .countdown-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .badge {
@@ -142,14 +163,78 @@
       box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
     }
 
+    .info-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--muted);
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .info-btn:hover {
+      border-color: rgba(96, 165, 250, 0.9);
+      color: #e5e7eb;
+      box-shadow: 0 0 10px rgba(96, 165, 250, 0.6);
+    }
+
+    .xmas-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .toggle-button {
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--muted);
+      cursor: pointer;
+      min-width: 46px;
+      text-align: center;
+    }
+
+    .toggle-button.toggle-on {
+      background: linear-gradient(135deg, #22c55e, #22d3ee);
+      color: #0b1120;
+      border-color: transparent;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.7);
+      font-weight: 600;
+    }
+
+    .calendar {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
     .calendar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       font-size: 0.85rem;
       color: var(--muted);
       padding: 0 4px;
+    }
+
+    .calendar-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .today-label {
@@ -160,18 +245,37 @@
       border: 1px solid rgba(75, 85, 99, 0.9);
     }
 
-    .calendar {
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
+    .reset-btn {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.7);
+    }
+
+    .format-explain {
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding: 0 4px 6px;
+    }
+
+    .format-explain strong {
+      color: #e5e7eb;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
+      margin-top: 4px;
     }
 
     @media (max-width: 700px) {
@@ -212,6 +316,34 @@
       pointer-events: none;
     }
 
+    /* “Nieve” acumulada en casillas cuando modo Navidad ON */
+    body.xmas-on .day::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 4px;
+      height: 12px;
+      border-radius: 999px 999px 40% 40%;
+      background: linear-gradient(to bottom, #f9fafb, rgba(249, 250, 251, 0.05));
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .day-icons {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.9rem;
+    }
+
+    .day-icon {
+      text-shadow: 0 0 6px rgba(15, 23, 42, 0.8);
+    }
+
     .day-number-center {
       position: relative;
       font-size: 2rem;
@@ -220,6 +352,7 @@
       text-shadow:
         0 0 10px rgba(255, 255, 255, 0.9),
         0 0 22px rgba(96, 165, 250, 0.9);
+      transition: transform 0.2s ease-out;
     }
 
     .day:hover {
@@ -239,10 +372,27 @@
     }
 
     .day.special {
-      border-color: rgba(250, 204, 21, 0.9);
+      border-color: rgba(250, 204, 21, 0.95);
       box-shadow:
-        0 0 0 1px rgba(250, 204, 21, 0.8),
-        0 0 24px rgba(250, 204, 21, 0.5);
+        0 0 0 1px rgba(250, 204, 21, 0.9),
+        0 0 26px rgba(250, 204, 21, 0.6);
+    }
+
+    .day-today {
+      box-shadow:
+        0 0 0 1px rgba(96, 165, 250, 1),
+        0 0 26px rgba(96, 165, 250, 0.9);
+      border-color: rgba(96, 165, 250, 1);
+    }
+
+    .day.just-opened .day-number-center {
+      animation: zoomNumber 0.3s ease-out;
+    }
+
+    @keyframes zoomNumber {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
 
     footer {
@@ -264,7 +414,7 @@
       width: 100%;
       max-width: 900px;
       padding: 6px 12px;
-      pointer-events: none; /* solo clickable por dentro */
+      pointer-events: none;
     }
 
     .social-inner {
@@ -352,7 +502,84 @@
       }
     }
 
-    /* -------- MODAL -------- */
+    /* -------- LUCES NAVIDAD -------- */
+
+    .xmas-lights {
+      position: absolute;
+      top: 12px;
+      left: 28px;
+      right: 28px;
+      height: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+      opacity: 0.15;
+      filter: grayscale(0.8);
+    }
+
+    .xmas-lights span {
+      width: 10px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4b5563;
+      box-shadow: none;
+      transform-origin: top center;
+    }
+
+    body.xmas-on .xmas-lights {
+      opacity: 1;
+      filter: none;
+    }
+
+    body.xmas-on .xmas-lights span {
+      animation: lightSwing 1.5s ease-in-out infinite alternate;
+    }
+
+    .xmas-lights span:nth-child(3n+1) {
+      background: #f97316;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.9);
+    }
+    .xmas-lights span:nth-child(3n+2) {
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+    .xmas-lights span:nth-child(3n+3) {
+      background: #60a5ff;
+      box-shadow: 0 0 10px rgba(96, 165, 250, 0.9);
+    }
+
+    @keyframes lightSwing {
+      0%   { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(2px) rotate(6deg); }
+    }
+
+    /* -------- NIEVE -------- */
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #e5f2ff;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0;
+      font-size: 0.7rem;
+      z-index: 10;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    body.xmas-on .snowflake {
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10px); }
+      100% { transform: translateY(110vh); }
+    }
+
+    /* -------- MODALES -------- */
 
     .modal-backdrop {
       position: fixed;
@@ -361,7 +588,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 40;
+      z-index: 80;
       padding: 16px;
     }
 
@@ -413,6 +640,18 @@
       background: rgba(15, 23, 42, 0.88);
     }
 
+    .pill-mode-directo {
+      background: radial-gradient(circle at top, rgba(248, 113, 113, 0.25), rgba(30, 64, 175, 0.9));
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+    }
+
+    .pill-mode-clip {
+      background: radial-gradient(circle at top, rgba(45, 212, 191, 0.25), rgba(8, 47, 73, 0.9));
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #a5f3fc;
+    }
+
     .modal-body {
       font-size: 0.9rem;
       line-height: 1.6;
@@ -438,24 +677,49 @@
   <main class="app">
     <header>
       <div class="title-block">
-        <h1>
-          <span class="emoji">🎄</span>
-          Calendario de Adviento · AnxanWoman
-        </h1>
+        <div class="title-row">
+          <h1>
+            <span class="emoji">🎄</span>
+            Calendario de Adviento · AnxanWoman
+          </h1>
+          <button class="info-btn" id="infoButton">i</button>
+        </div>
         <p class="subtitle">
           Haz clic en una casilla para ver qué reto, evento o premio toca ese día.
         </p>
+        <p class="countdown-text" id="countdownText"></p>
       </div>
-      <div class="badge">
-        <span class="badge-dot"></span>
-        Temporada 2025 · Especial Fortnite
+
+      <div class="badge-row">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Temporada 2025 · Especial Fortnite
+        </div>
+        <div class="xmas-toggle">
+          <span>Modo Navidad</span>
+          <button type="button" id="xmasToggle" class="toggle-button">OFF</button>
+        </div>
       </div>
     </header>
 
     <section class="calendar">
       <div class="calendar-header">
         <span>Días 1–27 diciembre</span>
-        <span class="today-label" id="todayLabel">Hoy: —</span>
+        <div class="calendar-tools">
+          <span class="today-label" id="todayLabel">Hoy: —</span>
+          <button class="reset-btn" id="resetButton">Reset</button>
+        </div>
+      </div>
+
+      <p class="format-explain">
+        <strong>Directo</strong> = se hace en Twitch + YouTube ·
+        <strong>Clip</strong> = contenido en Shorts (YouTube) o TikTok.
+      </p>
+
+      <!-- Luces de navidad por encima de las casillas -->
+      <div class="xmas-lights">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
 
       <div class="grid" id="calendarGrid">
@@ -490,7 +754,7 @@
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- MODAL de día -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal" id="modal">
       <div class="modal-header">
@@ -506,6 +770,29 @@
     </div>
   </div>
 
+  <!-- Mini-modal info -->
+  <div class="modal-backdrop" id="infoBackdrop">
+    <div class="modal" id="infoModal">
+      <div class="modal-header">
+        <h2 class="modal-title">Cómo funciona el calendario</h2>
+      </div>
+      <div class="modal-body">
+        <p>
+          Cada casilla corresponde a un día del calendario de Adviento de AnxanWoman.
+        </p>
+        <p style="margin-top:6px;">
+          <strong>Directo</strong> significa que ese día habrá contenido en vivo en Twitch y YouTube.
+          <br />
+          <strong>Clip</strong> significa que ese contenido se hará en formato corto (Short/Reel/TikTok).
+        </p>
+        <p style="margin-top:6px;">
+          Algunas casillas tienen <strong>premios especiales</strong> y se marcan con ⭐.
+          Al hacer clic en una casilla, verás el tipo, el formato y el premio de ese día.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- Sonidos (sube pop.mp3 y campanas.mp3 a tu repo) -->
   <audio id="popSound" src="pop.mp3" preload="auto"></audio>
   <audio id="bellSound" src="campanas.mp3" preload="auto"></audio>
@@ -513,10 +800,15 @@
   <script>
     const YEAR = 2025;
 
-    // mode = "Directo" o "Clip"
+    // Días modo directo
     const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26];
 
-    const daysConfig = [
+    // Días con premio grande para ⭐
+    const BIG_PRIZE_DAYS = [9, 21, 23, 27];
+
+    let isXmasOn = true;
+
+    const daysBase = [
       { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario y explicación de normas.",        stream: 1  },
       { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto de Fortnite o dinámica de comunidad.",             stream: 2  },
       { day: 3,  type: "Reto Fortnite",             prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Reto en partida con sorteo pequeño si se cumple el objetivo.",stream: 3  },
@@ -544,13 +836,18 @@
       { day: 25, type: "Sorteo Navidad",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad.",                                 stream: null },
       { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Recap de todo el calendario y hype para las campanadas.",    stream: null },
       { day: 27, type: "Campanadas",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas y sorteo final gordo.",       stream: null }
-    ].map(cfg => ({
+    ];
+
+    const daysConfig = daysBase.map(cfg => ({
       ...cfg,
-      mode: DIRECTO_DAYS.includes(cfg.day) ? "Directo" : "Clip"
+      mode: DIRECTO_DAYS.includes(cfg.day) ? "Directo" : "Clip",
+      bigPrize: BIG_PRIZE_DAYS.includes(cfg.day)
     }));
 
     const calendarGrid = document.getElementById("calendarGrid");
     const todayLabel = document.getElementById("todayLabel");
+    const resetButton = document.getElementById("resetButton");
+    const countdownText = document.getElementById("countdownText");
 
     const modalBackdrop = document.getElementById("modalBackdrop");
     const modalTitle = document.getElementById("modalTitle");
@@ -560,10 +857,15 @@
     const modalPrize = document.getElementById("modalPrize");
     const modalDescription = document.getElementById("modalDescription");
 
+    const infoButton = document.getElementById("infoButton");
+    const infoBackdrop = document.getElementById("infoBackdrop");
+
     const popSound = document.getElementById("popSound");
     const bellSound = document.getElementById("bellSound");
 
-    // Fecha actual para mostrar "Hoy"
+    const xmasToggle = document.getElementById("xmasToggle");
+
+    // Fecha actual para "Hoy" y contador a día 27
     const now = new Date();
     const formatter = new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
@@ -572,8 +874,19 @@
     });
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
+    const target27 = new Date(YEAR, 11, 27);
+    const diffMs = target27 - now;
+    if (diffMs > 0) {
+      const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      countdownText.textContent = `Faltan ${daysLeft} día${daysLeft !== 1 ? "s" : ""} para las campanadas.`;
+    } else if (diffMs > -86400000) {
+      countdownText.textContent = "¡Hoy son las campanadas!";
+    } else {
+      countdownText.textContent = "";
+    }
+
     // Casillas abiertas
-    const OPEN_KEY = "anxanwoman_calendario_opened_v3";
+    const OPEN_KEY = "anxanwoman_calendario_opened_v4";
     const openedSet = new Set(
       JSON.parse(localStorage.getItem(OPEN_KEY) || "[]")
     );
@@ -596,20 +909,35 @@
       }
     }
 
-    function launchConfetti() {
+    function launchConfetti27() {
       if (!window.confetti) return;
       confetti({
         particleCount: 140,
         spread: 75,
-        origin: { y: 0.4 }
+        origin: { y: 0.4 },
+        colors: ["#facc15", "#fbbf24", "#f97316"]
       });
       setTimeout(() => {
         confetti({
           particleCount: 90,
           spread: 60,
-          origin: { y: 0.7 }
+          origin: { y: 0.7 },
+          colors: ["#facc15", "#f97316"]
         });
       }, 300);
+    }
+
+    function launchBlueParticlesAt(element) {
+      if (!window.confetti) return;
+      const rect = element.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+      confetti({
+        particleCount: 35,
+        spread: 45,
+        origin: { x, y },
+        colors: ["#60a5ff", "#38bdf8", "#e0f2fe"]
+      });
     }
 
     function openModalForDay(config) {
@@ -617,11 +945,23 @@
       modalTitle.textContent = `Día ${day}`;
       modalDay.textContent = `Día ${day}`;
       modalType.textContent = `Tipo: ${type}`;
-      modalMode.textContent = `Formato: ${mode}`;
       modalPrize.textContent = `Premio: ${prize}`;
       modalDescription.textContent = description || "";
+
+      modalMode.textContent = `Formato: ${mode}`;
+      modalMode.classList.remove("pill-mode-directo", "pill-mode-clip");
+      if (mode === "Directo") {
+        modalMode.classList.add("pill-mode-directo");
+      } else {
+        modalMode.classList.add("pill-mode-clip");
+      }
+
       modalBackdrop.classList.add("visible");
     }
+
+    const today = new Date();
+    const isDecember = today.getFullYear() === YEAR && today.getMonth() === 11;
+    const todayDay = isDecember ? today.getDate() : null;
 
     function createDayCard(config) {
       const card = document.createElement("button");
@@ -630,18 +970,34 @@
       if (openedSet.has(config.day)) {
         card.classList.add("opened");
       }
+      if (todayDay && todayDay === config.day) {
+        card.classList.add("day-today");
+      }
 
-      card.innerHTML = `<span class="day-number-center">${config.day}</span>`;
+      const modeIcon = config.mode === "Directo" ? "🎥" : "📱";
+      const showStar = config.bigPrize;
+
+      card.innerHTML = `
+        <div class="day-icons">
+          <span class="day-icon">${modeIcon}</span>
+          ${showStar ? '<span class="day-icon">⭐</span>' : ""}
+        </div>
+        <span class="day-number-center">${config.day}</span>
+      `;
 
       card.addEventListener("click", (e) => {
         e.stopPropagation();
         openedSet.add(config.day);
         saveOpened();
         card.classList.add("opened");
+        card.classList.add("just-opened");
+        setTimeout(() => card.classList.remove("just-opened"), 350);
 
         playSoundForDay(config.day);
         if (config.day === 27) {
-          launchConfetti();
+          launchConfetti27();
+        } else {
+          launchBlueParticlesAt(card);
         }
 
         openModalForDay(config);
@@ -654,11 +1010,70 @@
       calendarGrid.appendChild(createDayCard(cfg));
     });
 
+    // Reset calendario
+    resetButton.addEventListener("click", () => {
+      openedSet.clear();
+      saveOpened();
+      document.querySelectorAll(".day.opened").forEach(d => d.classList.remove("opened"));
+    });
+
+    // Modal día - cerrar clicando fuera
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) {
         modalBackdrop.classList.remove("visible");
       }
     });
+
+    // Info modal
+    infoButton.addEventListener("click", () => {
+      infoBackdrop.classList.add("visible");
+    });
+
+    infoBackdrop.addEventListener("click", (e) => {
+      if (e.target === infoBackdrop) {
+        infoBackdrop.classList.remove("visible");
+      }
+    });
+
+    // Modo Navidad ON/OFF
+    function setXmas(on) {
+      isXmasOn = on;
+      if (on) {
+        document.body.classList.add("xmas-on");
+        xmasToggle.textContent = "ON";
+        xmasToggle.classList.add("toggle-on");
+      } else {
+        document.body.classList.remove("xmas-on");
+        xmasToggle.textContent = "OFF";
+        xmasToggle.classList.remove("toggle-on");
+      }
+    }
+
+    xmasToggle.addEventListener("click", () => {
+      setXmas(!isXmasOn);
+    });
+
+    // Por defecto, ON
+    setXmas(true);
+
+    // Nieve: crear copos
+    function createSnowflakes(count = 60) {
+      for (let i = 0; i < count; i++) {
+        const snow = document.createElement("div");
+        snow.className = "snowflake";
+        snow.textContent = "•";
+        const left = Math.random() * 100;
+        const duration = 6 + Math.random() * 6;
+        const delay = Math.random() * -duration;
+        snow.style.left = left + "vw";
+        snow.style.animationDuration = duration + "s";
+        snow.style.animationDelay = delay + "s";
+        document.body.appendChild(snow);
+      }
+    }
+
+    createSnowflakes();
   </script>
 </body>
 </html>
+
