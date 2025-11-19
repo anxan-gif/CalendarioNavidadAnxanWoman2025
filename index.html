@@ -87,6 +87,34 @@
       z-index: -2;
     }
 
+    /* Luces generales de la app */
+    .app-lights {
+      position: absolute;
+      inset: 4px;
+      border-radius: 32px;
+      pointer-events: none;
+      opacity: 0.2;
+      background:
+        radial-gradient(circle, #f97316 2px, transparent 4px),
+        radial-gradient(circle, #22c55e 2px, transparent 4px),
+        radial-gradient(circle, #60a5ff 2px, transparent 4px),
+        radial-gradient(circle, #e879f9 2px, transparent 4px);
+      background-repeat: repeat-x, repeat-x, repeat-x, repeat-x;
+      background-position:
+        top left,
+        bottom left,
+        left top,
+        right top;
+      background-size: 30px 10px, 28px 10px, 26px 10px, 32px 10px;
+      mix-blend-mode: screen;
+      animation: lights-wave 4s linear infinite;
+      z-index: -1;
+    }
+
+    html.navidad-off .app-lights {
+      opacity: 0;
+    }
+
     /* Iconos Fortnite suaves */
     .fn-icon {
       position: absolute;
@@ -139,7 +167,7 @@
       gap: 10px;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .title-block {
@@ -221,8 +249,7 @@
       justify-content: flex-end;
     }
 
-    .navidad-toggle,
-    .stats-toggle {
+    .navidad-toggle {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -266,8 +293,27 @@
       font-size: 0.78rem;
     }
 
-    .calendar {
+    /* Contador global 27 */
+    .global-countdown {
       margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #e0f2fe;
+      background: radial-gradient(circle at left, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.96));
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
+    }
+
+    .global-countdown span.icon {
+      font-size: 1rem;
+    }
+
+    .calendar {
+      margin-top: 10px;
       background:
         radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18) 0, transparent 55%),
         radial-gradient(circle at 100% 0%, rgba(251, 113, 133, 0.2) 0, transparent 60%),
@@ -533,12 +579,12 @@
       padding-right: 4px;
     }
 
-    /* Luces de Navidad alrededor del calendario */
+    /* Luces del calendario */
     .lights {
       position: absolute;
       inset: 8px;
       pointer-events: none;
-      opacity: 0.15;
+      opacity: 0.18;
       background:
         radial-gradient(circle, #f97316 2px, transparent 4px),
         radial-gradient(circle, #22c55e 2px, transparent 4px),
@@ -562,8 +608,7 @@
     }
 
     html.navidad-off .lights {
-      opacity: 0.05;
-      filter: grayscale(0.7);
+      opacity: 0;
     }
 
     /* -------- MODAL DÍA -------- */
@@ -657,6 +702,7 @@
       text-shadow: 0 0 10px rgba(34, 211, 238, 0.7);
       border-top: 1px dashed rgba(55,65,81,0.9);
       padding-top: 6px;
+      display: none; /* ya no mostramos contador dentro del modal */
     }
 
     @keyframes fadeIn {
@@ -669,7 +715,7 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* -------- MODAL INFO -------- */
+    /* -------- MODAL INFO / STATS -------- */
 
     .info-backdrop,
     .stats-backdrop {
@@ -893,12 +939,14 @@
   <div class="snow-layer back"></div>
   <div class="snow-layer front"></div>
 
-  <!-- Iconos Fortnite suaves -->
-  <div class="fn-icon llama">🦙</div>
-  <div class="fn-icon bus">🚌</div>
-  <div class="fn-icon drop">🪂</div>
-
   <main class="app">
+    <div class="app-lights"></div>
+
+    <!-- Iconos Fortnite suaves -->
+    <div class="fn-icon llama">🦙</div>
+    <div class="fn-icon bus">🚌</div>
+    <div class="fn-icon drop">🪂</div>
+
     <header>
       <div class="title-block">
         <h1>
@@ -927,6 +975,11 @@
         </div>
       </div>
     </header>
+
+    <div class="global-countdown" id="globalCountdown">
+      <span class="icon">🕛</span>
+      <span id="globalCountdownText">Cargando contador...</span>
+    </div>
 
     <section class="calendar">
       <div class="lights"></div>
@@ -1046,14 +1099,11 @@
     </div>
   </div>
 
-  <!-- Sonidos -->
-  <audio id="popSound" src="pop.mp3" preload="auto"></audio>
-  <audio id="bellSound" src="campanas.mp3" preload="auto"></audio>
-
   <script>
     const YEAR = 2025;
 
-    const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26];
+    // ahora el 27 también es Directo
+    const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26,27];
     const BIG_PRIZE_DAYS = [9,21,23,27];
 
     // Config base con V-Bucks "teóricos"
@@ -1098,6 +1148,7 @@
     const resetBtn = document.getElementById("resetBtn");
     const navidadToggle = document.getElementById("navidadToggle");
     const statsBtn = document.getElementById("statsBtn");
+    const globalCountdownText = document.getElementById("globalCountdownText");
 
     const modalBackdrop = document.getElementById("modalBackdrop");
     const modalTitle = document.getElementById("modalTitle");
@@ -1114,9 +1165,6 @@
     const statsVbucks = document.getElementById("statsVbucks");
     const statsCodeUsers = document.getElementById("statsCodeUsers");
 
-    const popSound = document.getElementById("popSound");
-    const bellSound = document.getElementById("bellSound");
-
     const now = new Date();
     const formatter = new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
@@ -1126,45 +1174,46 @@
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayDay = (today.getMonth() === 11) ? today.getDate() : null; // solo diciembre
+    const todayDay = (today.getMonth() === 11) ? today.getDate() : null;
+
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
 
     const OPEN_KEY = "anxanwoman_calendario_opened_v5";
     const openedSet = new Set(
       JSON.parse(localStorage.getItem(OPEN_KEY) || "[]")
     );
 
+    const STATS_SEEN_KEY = "anx_stats_seen_" + todayStr;
+    const EGG_PREV_KEY = "anx_egg_prev_" + todayStr;
+    const EGG_PRIZE_KEY = "anx_egg_prize_" + todayStr;
+
     function saveOpened() {
       localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
     }
 
+    // quitamos la música: función vacía
     function playSoundForDay(day) {
-      if (day === 27) {
-        if (bellSound) {
-          bellSound.currentTime = 0;
-          bellSound.play().catch(() => {});
-        }
-      } else {
-        if (popSound) {
-          popSound.currentTime = 0;
-          popSound.play().catch(() => {});
-        }
-      }
+      // no hace nada
     }
 
-    function launchConfetti() {
+    function launchConfetti(big = false) {
       if (!window.confetti) return;
+      const count = big ? 140 : 80;
+      const spread = big ? 75 : 55;
       confetti({
-        particleCount: 140,
-        spread: 75,
+        particleCount: count,
+        spread: spread,
         origin: { y: 0.4 }
       });
-      setTimeout(() => {
-        confetti({
-          particleCount: 90,
-          spread: 60,
-          origin: { y: 0.7 }
-        });
-      }, 300);
+      if (big) {
+        setTimeout(() => {
+          confetti({
+            particleCount: 90,
+            spread: 60,
+            origin: { y: 0.7 }
+          });
+        }, 300);
+      }
     }
 
     function openModalForDay(config) {
@@ -1184,23 +1233,8 @@
       }
 
       modalDescription.textContent = description || "";
+      // Ya no mostramos contador dentro del modal
       modalCountdown.textContent = "";
-
-      if (day === 27) {
-        const target = new Date(YEAR, 11, 27);
-        const diffMs = target - today;
-        if (diffMs > 0) {
-          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-          modalCountdown.textContent = `Faltan ${diffDays} día${diffDays !== 1 ? "s" : ""} para las campanadas.`;
-        } else if (diffMs <= 0 &&
-          today.getFullYear() === YEAR &&
-          today.getMonth() === 11 &&
-          today.getDate() === 27) {
-          modalCountdown.textContent = "¡Hoy son las campanadas! 🎉";
-        } else {
-          modalCountdown.textContent = "Las campanadas ya se celebraron, gracias por acompañarme. 💙";
-        }
-      }
 
       modalBackdrop.classList.add("visible");
     }
@@ -1251,6 +1285,7 @@
       if (openedSet.has(config.day)) {
         card.classList.add("opened");
       }
+
       const isToday =
         today.getFullYear() === YEAR &&
         today.getMonth() === 11 &&
@@ -1271,15 +1306,19 @@
       card.addEventListener("click", (e) => {
         e.stopPropagation();
 
-        // Easter egg: casilla del día anterior
-        if (todayDay && config.day === todayDay - 1) {
+        // Easter egg: casilla del día anterior (solo 1 vez por día)
+        if (todayDay && config.day === todayDay - 1 && !localStorage.getItem(EGG_PREV_KEY)) {
           showToast("Ups, esto ya ha ocurrido... Ojalá tener una máquina del tiempo 🔁");
+          localStorage.setItem(EGG_PREV_KEY, "1");
         }
 
-        // Easter egg: casillas de premio grande en el futuro
-        if (config.bigPrize && todayDay && config.day > todayDay) {
+        // Easter egg: casillas de premio grande en el futuro (solo 1 vez por día)
+        if (config.bigPrize && todayDay && config.day > todayDay && !localStorage.getItem(EGG_PRIZE_KEY)) {
           showToast("¡Qué impaciente eres! Todo llega a su tiempo ⭐");
+          localStorage.setItem(EGG_PRIZE_KEY, "1");
         }
+
+        const wasOpenedBefore = openedSet.has(config.day);
 
         openedSet.add(config.day);
         saveOpened();
@@ -1290,11 +1329,17 @@
 
         createParticles(card);
         playSoundForDay(config.day);
-        if (config.day === 27) {
-          launchConfetti();
+
+        // Confeti solo la primera vez que se abre esa casilla
+        if (!wasOpenedBefore) {
+          if (config.day === 27) {
+            launchConfetti(true);
+          } else {
+            launchConfetti(false);
+          }
         }
 
-        // destello según formato
+        // Destello según formato
         if (config.mode === "Directo") {
           card.classList.add("flash-directo");
           setTimeout(() => card.classList.remove("flash-directo"), 500);
@@ -1412,9 +1457,34 @@
 
     applyFilter();
 
-    // Mostrar stats emergente al cargar
+    // Contador global para el 27 (fuera del calendario)
+    function updateGlobalCountdown() {
+      const target = new Date(YEAR, 11, 27); // 27 diciembre
+      const diffMs = target - today;
+      let text = "";
+
+      if (today.getFullYear() !== YEAR || today.getMonth() !== 11) {
+        text = "Este contador se activará en diciembre para las campanadas del 27 🕛";
+      } else if (diffMs > 0) {
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        text = `Faltan ${diffDays} día${diffDays !== 1 ? "s" : ""} para las campanadas del 27 de diciembre 🕛`;
+      } else if (diffMs === 0) {
+        text = "¡Hoy son las campanadas del calendario! 🎉";
+      } else {
+        text = "Las campanadas ya se celebraron, gracias por acompañarme 💙";
+      }
+
+      globalCountdownText.textContent = text;
+    }
+
+    updateGlobalCountdown();
+
+    // Stats solo 1 vez por día al entrar en la página
     window.addEventListener("load", () => {
-      openStats();
+      if (!localStorage.getItem(STATS_SEEN_KEY)) {
+        openStats();
+        localStorage.setItem(STATS_SEEN_KEY, "1");
+      }
     });
   </script>
 </body>
