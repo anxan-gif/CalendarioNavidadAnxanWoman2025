@@ -93,7 +93,7 @@
       inset: 4px;
       border-radius: 32px;
       pointer-events: none;
-      opacity: 0.18;
+      opacity: 0.2;
       background:
         radial-gradient(circle, #f97316 2px, transparent 4px),
         radial-gradient(circle, #22c55e 2px, transparent 4px),
@@ -107,7 +107,7 @@
         right top;
       background-size: 30px 10px, 28px 10px, 26px 10px, 32px 10px;
       mix-blend-mode: screen;
-      animation: lights-wave 7s linear infinite;
+      animation: lights-wave 6s linear infinite;
       z-index: -1;
     }
 
@@ -115,42 +115,32 @@
       opacity: 0;
     }
 
-    /* Iconos Fortnite suaves */
-    .fn-icon {
-      position: absolute;
-      font-size: 5rem;
-      opacity: 0.05;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .fn-icon.llama { top: 8%; left: 4%; }
-    .fn-icon.bus   { top: 10%; right: 5%; transform: rotate(-8deg); }
-    .fn-icon.drop  { bottom: 18%; left: 50%; transform: translateX(-50%) rotate(12deg); }
-
-    /* Nieve global (una sola capa) */
+    /* Nieve realista (copos grandes, profundidad) */
     .snow-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(2px 2px at 10% 20%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(3px 3px at 80% 30%, rgba(248, 250, 252, 0.9) 0, transparent 60%),
-        radial-gradient(2px 2px at 20% 80%, rgba(248, 250, 252, 0.85) 0, transparent 60%),
-        radial-gradient(3px 3px at 70% 90%, rgba(248, 250, 252, 0.9) 0, transparent 60%);
+        radial-gradient(5px 5px at 10% 10%, rgba(255, 255, 255, 0.95) 0, transparent 60%),
+        radial-gradient(4px 4px at 40% 20%, rgba(255, 255, 255, 0.9) 0, transparent 60%),
+        radial-gradient(6px 6px at 70% 15%, rgba(255, 255, 255, 0.95) 0, transparent 60%),
+        radial-gradient(4px 4px at 20% 70%, rgba(255, 255, 255, 0.85) 0, transparent 60%),
+        radial-gradient(5px 5px at 80% 60%, rgba(255, 255, 255, 0.9) 0, transparent 60%),
+        radial-gradient(6px 6px at 15% 90%, rgba(255, 255, 255, 0.95) 0, transparent 60%),
+        radial-gradient(4px 4px at 60% 85%, rgba(255, 255, 255, 0.85) 0, transparent 60%);
       background-size: 260px 260px;
       opacity: 0;
-      z-index: 5;
-      animation: snowFall 18s linear infinite;
+      z-index: 3;
+      animation: snowFall 14s linear infinite;
     }
 
     @keyframes snowFall {
-      0% { transform: translateY(-40px); }
-      100% { transform: translateY(40px); }
+      0% { transform: translateY(-60px); }
+      100% { transform: translateY(60px); }
     }
 
     html.navidad-on .snow-layer {
-      opacity: 0.8;
+      opacity: 1;
     }
 
     html.navidad-off .snow-layer {
@@ -580,7 +570,7 @@
       position: absolute;
       inset: 8px;
       pointer-events: none;
-      opacity: 0.18;
+      opacity: 0.2;
       background:
         radial-gradient(circle, #f97316 2px, transparent 4px),
         radial-gradient(circle, #22c55e 2px, transparent 4px),
@@ -595,7 +585,7 @@
       background-size: 26px 8px, 24px 8px, 22px 8px, 28px 8px;
       mix-blend-mode: screen;
       z-index: -1;
-      animation: lights-wave 7s linear infinite;
+      animation: lights-wave 6s linear infinite;
     }
 
     @keyframes lights-wave {
@@ -692,7 +682,7 @@
     }
 
     .modal-countdown {
-      display: none;
+      display: none; /* no usamos countdown dentro del modal */
     }
 
     @keyframes fadeIn {
@@ -922,19 +912,56 @@
       color: #facc15;
       text-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
     }
+
+    /* Popup redes flotante */
+    .social-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(96,165,250,0.6);
+      border-radius: 16px;
+      padding: 12px 16px;
+      z-index: 9999;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.7),
+                  0 0 18px rgba(96,165,250,0.3);
+      font-size: 0.85rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .social-popup.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .social-popup a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: white;
+      margin-bottom: 4px;
+      font-size: 0.8rem;
+    }
+
+    .social-popup a:last-child {
+      margin-bottom: 0;
+    }
+
+    .social-popup small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
-  <!-- Nieve (optimizada, una capa) -->
+  <!-- Nieve realista -->
   <div class="snow-layer"></div>
 
   <main class="app">
     <div class="app-lights"></div>
-
-    <!-- Iconos Fortnite suaves -->
-    <div class="fn-icon llama">🦙</div>
-    <div class="fn-icon bus">🚌</div>
-    <div class="fn-icon drop">🪂</div>
 
     <header>
       <div class="title-block">
@@ -1082,10 +1109,20 @@
         </div>
       </div>
       <p class="stat-note">
-        Estos números son un contador simbólico pensado para el calendario y el directo. Actualiza la
-        página para ver cómo crecen a medida que avanza diciembre.
+        Estos números son un contador simbólico pensado para el calendario y el directo.
+        El número de personas usando el código empieza en 20 y aumenta 5 cada semana.
       </p>
     </div>
+  </div>
+
+  <!-- Popup redes flotante -->
+  <div class="social-popup" id="socialPopup">
+    <strong>¡Sígueme en redes! 💙</strong><br>
+    <a href="https://www.youtube.com/@AnxanWoman" target="_blank" rel="noopener">▶ YouTube</a>
+    <a href="https://www.twitch.tv/AnxanWoman" target="_blank" rel="noopener">💜 Twitch</a>
+    <a href="https://www.tiktok.com/@anxanwoman" target="_blank" rel="noopener">♪ TikTok</a>
+    <br>
+    <small>Y apoya con el código <b>ANXANWOMAN</b> en la tienda de Fortnite 💙</small>
   </div>
 
   <script>
@@ -1144,7 +1181,6 @@
     const modalMode = document.getElementById("modalMode");
     const modalPrize = document.getElementById("modalPrize");
     const modalDescription = document.getElementById("modalDescription");
-    const modalCountdown = document.getElementById("modalCountdown");
 
     const infoBtn = document.getElementById("infoBtn");
     const infoBackdrop = document.getElementById("infoBackdrop");
@@ -1161,7 +1197,7 @@
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayDay = (today.getMonth() === 11) ? today.getDate() : null;
+    const todayDay = today.getMonth() === 11 ? today.getDate() : null;
 
     const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
 
@@ -1174,23 +1210,61 @@
     const EGG_PREV_KEY = "anx_egg_prev_" + todayStr;
     const EGG_PRIZE_KEY = "anx_egg_prize_" + todayStr;
 
+    // contador de personas usando el código (empieza en 20, +5 cada semana)
+    const CODE_USERS_KEY = "anx_code_users";
+    const CODE_LAST_UPDATE_KEY = "anx_code_last_update";
+
+    function getCodeUsers() {
+      const now = new Date();
+      let users = parseInt(localStorage.getItem(CODE_USERS_KEY) || "20", 10);
+      let lastStr = localStorage.getItem(CODE_LAST_UPDATE_KEY);
+
+      if (!lastStr) {
+        localStorage.setItem(CODE_USERS_KEY, String(users));
+        localStorage.setItem(CODE_LAST_UPDATE_KEY, now.toISOString());
+        return users;
+      }
+
+      const last = new Date(lastStr);
+      const diffMs = now - last;
+      const weekMs = 7 * 24 * 60 * 60 * 1000;
+
+      if (diffMs >= weekMs) {
+        const weeks = Math.floor(diffMs / weekMs);
+        users += weeks * 5;
+        const updated = new Date(last.getTime() + weeks * weekMs);
+        localStorage.setItem(CODE_USERS_KEY, String(users));
+        localStorage.setItem(CODE_LAST_UPDATE_KEY, updated.toISOString());
+      }
+
+      return users;
+    }
+
     function saveOpened() {
       localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
     }
 
-    function playSoundForDay(day) {
-      // sin sonido (optimizado)
-    }
+    // (no hay sonidos)
+    function playSoundForDay(day) {}
 
     function launchConfetti(big = false) {
       if (!window.confetti) return;
-      const count = big ? 80 : 40;
-      const spread = big ? 60 : 45;
+      const count = big ? 120 : 70;
+      const spread = big ? 70 : 55;
       confetti({
         particleCount: count,
         spread: spread,
         origin: { y: 0.4 }
       });
+      if (big) {
+        setTimeout(() => {
+          confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.7 }
+          });
+        }, 280);
+      }
     }
 
     function openModalForDay(config) {
@@ -1210,7 +1284,6 @@
       }
 
       modalDescription.textContent = description || "";
-      modalCountdown.textContent = "";
 
       modalBackdrop.classList.add("visible");
     }
@@ -1220,11 +1293,11 @@
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      for (let i = 0; i < 4; i++) { // menos partículas (rendimiento)
+      for (let i = 0; i < 6; i++) {
         const p = document.createElement("span");
         p.className = "particle";
         const angle = Math.random() * Math.PI * 2;
-        const distance = 22 + Math.random() * 10;
+        const distance = 24 + Math.random() * 10;
         const dx = Math.cos(angle) * distance;
         const dy = Math.sin(angle) * distance * -1;
 
@@ -1304,7 +1377,6 @@
         createParticles(card);
         playSoundForDay(config.day);
 
-        // Confeti solo la primera vez que se abre esa casilla
         if (!wasOpenedBefore) {
           if (config.day === 27) {
             launchConfetti(true);
@@ -1313,7 +1385,6 @@
           }
         }
 
-        // Destello según formato
         if (config.mode === "Directo") {
           card.classList.add("flash-directo");
           setTimeout(() => card.classList.remove("flash-directo"), 500);
@@ -1328,22 +1399,26 @@
       return card;
     }
 
+    // Pintar casillas
     daysConfig.forEach(cfg => {
       calendarGrid.appendChild(createDayCard(cfg));
     });
 
+    // Reset
     resetBtn.addEventListener("click", () => {
       openedSet.clear();
       saveOpened();
       document.querySelectorAll(".day.opened").forEach(el => el.classList.remove("opened"));
     });
 
+    // Modal cierre
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) {
         modalBackdrop.classList.remove("visible");
       }
     });
 
+    // Info modal
     infoBtn.addEventListener("click", () => {
       infoBackdrop.classList.add("visible");
     });
@@ -1354,6 +1429,7 @@
       }
     });
 
+    // Modo Navidad toggle
     function setNavidad(on) {
       if (on) {
         document.documentElement.classList.add("navidad-on");
@@ -1373,14 +1449,14 @@
     // Stats
     function computeStats() {
       let totalVb = 0;
-      if (today.getMonth() === 11) {
+      if (today.getMonth() === 11 && today.getFullYear() === YEAR) {
         for (const cfg of daysConfig) {
           if (cfg.day <= todayDay) {
             totalVb += cfg.vb || 0;
           }
         }
       }
-      const codeUsers = today.getMonth() === 11 ? todayDay * 3 : 0;
+      const codeUsers = getCodeUsers();
 
       statsVbucks.textContent = totalVb.toLocaleString("es-ES");
       statsCodeUsers.textContent = codeUsers.toLocaleString("es-ES");
@@ -1426,36 +1502,49 @@
 
     applyFilter();
 
-    // Contador global 27
+    // Contador global 27 (activo ya)
     function updateGlobalCountdown() {
-      const target = new Date(YEAR, 11, 27); // 27 diciembre
-      const diffMs = target - today;
-      let text = "";
+      const target = new Date(YEAR, 11, 27);
+      const nowReal = new Date();
+      const diffMs = target - nowReal;
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-      if (today.getFullYear() !== YEAR || today.getMonth() !== 11) {
-        text = "Este contador se activará en diciembre para las campanadas del 27 🕛";
-      } else if (diffMs > 0) {
-        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        text = `Faltan ${diffDays} día${diffDays !== 1 ? "s" : ""} para las campanadas del 27 de diciembre 🕛`;
-      } else if (diffMs === 0) {
-        text = "¡Hoy son las campanadas del calendario! 🎉";
+      if (diffDays > 0) {
+        globalCountdownText.textContent =
+          `Faltan ${diffDays} día${diffDays !== 1 ? "s" : ""} para las campanadas del 27 de diciembre 🕛`;
+      } else if (diffDays === 0) {
+        globalCountdownText.textContent = "¡Hoy son las campanadas del calendario! 🎉";
       } else {
-        text = "Las campanadas ya se celebraron, gracias por acompañarme 💙";
+        globalCountdownText.textContent = "Las campanadas ya se celebraron, gracias por acompañarme 💙";
       }
-
-      globalCountdownText.textContent = text;
     }
 
     updateGlobalCountdown();
 
     // Stats solo 1 vez por día al entrar
     window.addEventListener("load", () => {
-      const STATS_SEEN_KEY = "anx_stats_seen_" + todayStr;
       if (!localStorage.getItem(STATS_SEEN_KEY)) {
         openStats();
         localStorage.setItem(STATS_SEEN_KEY, "1");
       }
     });
+
+    // Popup de redes mientras haces scroll (oculto al final)
+    const popup = document.getElementById("socialPopup");
+    function togglePopup() {
+      const scrollTop = window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const atBottom = scrollTop + windowHeight >= pageHeight - 80;
+
+      if (atBottom) {
+        popup.classList.remove("visible");
+      } else {
+        popup.classList.add("visible");
+      }
+    }
+    window.addEventListener("scroll", togglePopup);
+    window.addEventListener("load", togglePopup);
   </script>
 </body>
 </html>
