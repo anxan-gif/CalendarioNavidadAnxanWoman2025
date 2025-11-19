@@ -93,7 +93,7 @@
       inset: 4px;
       border-radius: 32px;
       pointer-events: none;
-      opacity: 0.2;
+      opacity: 0.18;
       background:
         radial-gradient(circle, #f97316 2px, transparent 4px),
         radial-gradient(circle, #22c55e 2px, transparent 4px),
@@ -107,7 +107,7 @@
         right top;
       background-size: 30px 10px, 28px 10px, 26px 10px, 32px 10px;
       mix-blend-mode: screen;
-      animation: lights-wave 4s linear infinite;
+      animation: lights-wave 7s linear infinite;
       z-index: -1;
     }
 
@@ -128,33 +128,29 @@
     .fn-icon.bus   { top: 10%; right: 5%; transform: rotate(-8deg); }
     .fn-icon.drop  { bottom: 18%; left: 50%; transform: translateX(-50%) rotate(12deg); }
 
-    /* Nieve global */
+    /* Nieve global (una sola capa) */
     .snow-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
       background-image:
         radial-gradient(2px 2px at 10% 20%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(3px 3px at 80% 30%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(2px 2px at 20% 80%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(3px 3px at 70% 90%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(2px 2px at 40% 50%, rgba(248, 250, 252, 0.95) 0, transparent 60%),
-        radial-gradient(3px 3px at 60% 10%, rgba(248, 250, 252, 0.95) 0, transparent 60%);
-      background-size: 240px 260px;
+        radial-gradient(3px 3px at 80% 30%, rgba(248, 250, 252, 0.9) 0, transparent 60%),
+        radial-gradient(2px 2px at 20% 80%, rgba(248, 250, 252, 0.85) 0, transparent 60%),
+        radial-gradient(3px 3px at 70% 90%, rgba(248, 250, 252, 0.9) 0, transparent 60%);
+      background-size: 260px 260px;
       opacity: 0;
       z-index: 5;
+      animation: snowFall 18s linear infinite;
     }
 
-    .snow-layer.front { animation: snowFall 12s linear infinite; }
-    .snow-layer.back  { animation: snowFall 20s linear infinite reverse; }
-
     @keyframes snowFall {
-      0% { transform: translateY(-60px); }
-      100% { transform: translateY(60px); }
+      0% { transform: translateY(-40px); }
+      100% { transform: translateY(40px); }
     }
 
     html.navidad-on .snow-layer {
-      opacity: 0.9;
+      opacity: 0.8;
     }
 
     html.navidad-off .snow-layer {
@@ -599,7 +595,7 @@
       background-size: 26px 8px, 24px 8px, 22px 8px, 28px 8px;
       mix-blend-mode: screen;
       z-index: -1;
-      animation: lights-wave 4s linear infinite;
+      animation: lights-wave 7s linear infinite;
     }
 
     @keyframes lights-wave {
@@ -696,13 +692,7 @@
     }
 
     .modal-countdown {
-      margin-top: 8px;
-      font-size: 0.9rem;
-      color: #22d3ee;
-      text-shadow: 0 0 10px rgba(34, 211, 238, 0.7);
-      border-top: 1px dashed rgba(55,65,81,0.9);
-      padding-top: 6px;
-      display: none; /* ya no mostramos contador dentro del modal */
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -935,9 +925,8 @@
   </style>
 </head>
 <body>
-  <!-- Nieve -->
-  <div class="snow-layer back"></div>
-  <div class="snow-layer front"></div>
+  <!-- Nieve (optimizada, una capa) -->
+  <div class="snow-layer"></div>
 
   <main class="app">
     <div class="app-lights"></div>
@@ -1102,11 +1091,9 @@
   <script>
     const YEAR = 2025;
 
-    // ahora el 27 también es Directo
     const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26,27];
     const BIG_PRIZE_DAYS = [9,21,23,27];
 
-    // Config base con V-Bucks "teóricos"
     const baseConfig = [
       { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario y explicación de normas.", vb: 0 },
       { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto de Fortnite o dinámica de comunidad.", vb: 0 },
@@ -1191,29 +1178,19 @@
       localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
     }
 
-    // quitamos la música: función vacía
     function playSoundForDay(day) {
-      // no hace nada
+      // sin sonido (optimizado)
     }
 
     function launchConfetti(big = false) {
       if (!window.confetti) return;
-      const count = big ? 140 : 80;
-      const spread = big ? 75 : 55;
+      const count = big ? 80 : 40;
+      const spread = big ? 60 : 45;
       confetti({
         particleCount: count,
         spread: spread,
         origin: { y: 0.4 }
       });
-      if (big) {
-        setTimeout(() => {
-          confetti({
-            particleCount: 90,
-            spread: 60,
-            origin: { y: 0.7 }
-          });
-        }, 300);
-      }
     }
 
     function openModalForDay(config) {
@@ -1233,7 +1210,6 @@
       }
 
       modalDescription.textContent = description || "";
-      // Ya no mostramos contador dentro del modal
       modalCountdown.textContent = "";
 
       modalBackdrop.classList.add("visible");
@@ -1244,11 +1220,11 @@
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 4; i++) { // menos partículas (rendimiento)
         const p = document.createElement("span");
         p.className = "particle";
         const angle = Math.random() * Math.PI * 2;
-        const distance = 26 + Math.random() * 12;
+        const distance = 22 + Math.random() * 10;
         const dx = Math.cos(angle) * distance;
         const dy = Math.sin(angle) * distance * -1;
 
@@ -1301,8 +1277,6 @@
         <span class="day-number-center">${config.day}</span>
       `;
 
-      const numberEl = card.querySelector(".day-number-center");
-
       card.addEventListener("click", (e) => {
         e.stopPropagation();
 
@@ -1354,26 +1328,22 @@
       return card;
     }
 
-    // Pintar casillas
     daysConfig.forEach(cfg => {
       calendarGrid.appendChild(createDayCard(cfg));
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
       openedSet.clear();
       saveOpened();
       document.querySelectorAll(".day.opened").forEach(el => el.classList.remove("opened"));
     });
 
-    // Modal cierre
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) {
         modalBackdrop.classList.remove("visible");
       }
     });
 
-    // Info modal
     infoBtn.addEventListener("click", () => {
       infoBackdrop.classList.add("visible");
     });
@@ -1384,7 +1354,6 @@
       }
     });
 
-    // Modo Navidad toggle
     function setNavidad(on) {
       if (on) {
         document.documentElement.classList.add("navidad-on");
@@ -1457,7 +1426,7 @@
 
     applyFilter();
 
-    // Contador global para el 27 (fuera del calendario)
+    // Contador global 27
     function updateGlobalCountdown() {
       const target = new Date(YEAR, 11, 27); // 27 diciembre
       const diffMs = target - today;
@@ -1479,8 +1448,9 @@
 
     updateGlobalCountdown();
 
-    // Stats solo 1 vez por día al entrar en la página
+    // Stats solo 1 vez por día al entrar
     window.addEventListener("load", () => {
+      const STATS_SEEN_KEY = "anx_stats_seen_" + todayStr;
       if (!localStorage.getItem(STATS_SEEN_KEY)) {
         openStats();
         localStorage.setItem(STATS_SEEN_KEY, "1");
