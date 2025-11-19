@@ -71,8 +71,20 @@
         radial-gradient(circle at 90% 0%, rgba(251, 113, 133, 0.25) 0, transparent 55%);
       opacity: 0.45;
       pointer-events: none;
+      z-index: -2;
+    }
+
+    /* Iconos Fortnite estilo emoji */
+    .fn-icon {
+      position: absolute;
+      font-size: 5.5rem;
+      opacity: 0.06;
+      pointer-events: none;
       z-index: -1;
     }
+    .fn-icon.llama { top: 10%; left: 5%; }
+    .fn-icon.bus   { top: 12%; right: 6%; transform: rotate(-8deg); }
+    .fn-icon.drop  { bottom: 8%; left: 50%; transform: translateX(-50%) rotate(10deg); }
 
     header {
       display: flex;
@@ -233,48 +245,67 @@
         0 0 24px rgba(250, 204, 21, 0.5);
     }
 
-    .hint {
-      font-size: 0.8rem;
+    footer {
       margin-top: 10px;
-      color: var(--muted);
-      padding: 0 4px;
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.7);
+      text-align: right;
+      padding-right: 4px;
     }
 
-    .hint strong {
-      color: var(--accent-2);
+    /* -------- BARRA DE REDES FIJA -------- */
+
+    .social-bar {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      z-index: 60;
+      width: 100%;
+      max-width: 900px;
+      padding: 6px 12px;
+      pointer-events: none; /* solo clickable por dentro */
     }
 
-    /* Redes sociales */
-    .social {
-      margin-top: 14px;
-      padding: 10px 4px 0;
-      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+    .social-inner {
+      pointer-events: auto;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 8px;
-      font-size: 0.85rem;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 18px rgba(96, 165, 250, 0.35);
+      padding: 6px 12px;
+      font-size: 0.8rem;
     }
 
-    .social-text {
+    .social-left {
       color: var(--muted);
+      white-space: nowrap;
     }
 
     .social-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
+      justify-content: center;
     }
 
     .social-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.98);
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text);
     }
 
@@ -300,8 +331,9 @@
     .icon-tiktok  { background: #000000; border: 1px solid #22d3ee; }
 
     .creator-code {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--muted);
+      white-space: nowrap;
     }
 
     .creator-code span {
@@ -310,12 +342,14 @@
       text-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
     }
 
-    footer {
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: rgba(148, 163, 184, 0.7);
-      text-align: right;
-      padding-right: 4px;
+    @media (max-width: 700px) {
+      .social-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .creator-code {
+        margin-left: 2px;
+      }
     }
 
     /* -------- MODAL -------- */
@@ -396,6 +430,11 @@
   </style>
 </head>
 <body>
+  <!-- Iconos Fortnite de fondo -->
+  <div class="fn-icon llama">🦙</div>
+  <div class="fn-icon bus">🚌</div>
+  <div class="fn-icon drop">🪂</div>
+
   <main class="app">
     <header>
       <div class="title-block">
@@ -422,39 +461,34 @@
       <div class="grid" id="calendarGrid">
         <!-- casillas -->
       </div>
-
-      <p class="hint">
-        Las casillas que ya se han abierto aparecerán con un borde dorado. <strong>Solo abre la que elija el chat</strong> en cada directo.
-      </p>
-
-      <section class="social">
-        <p class="social-text">
-          Sígueme en redes sociales para no perderte nada:
-        </p>
-        <div class="social-row">
-          <a class="social-link" href="https://www.youtube.com/@AnxanWoman" target="_blank" rel="noopener">
-            <span class="icon-circle icon-youtube">▶</span>
-            <span>YouTube · AnxanWoman</span>
-          </a>
-          <a class="social-link" href="https://www.twitch.tv/AnxanWoman" target="_blank" rel="noopener">
-            <span class="icon-circle icon-twitch">T</span>
-            <span>Twitch · AnxanWoman</span>
-          </a>
-          <a class="social-link" href="https://www.tiktok.com/@anxanwoman" target="_blank" rel="noopener">
-            <span class="icon-circle icon-tiktok">♪</span>
-            <span>TikTok · AnxanWoman</span>
-          </a>
-        </div>
-        <p class="creator-code">
-          Apoya mi contenido en Fortnite con mi código de creador: <span>ANXANWOMAN</span>
-        </p>
-      </section>
     </section>
 
     <footer>
       Diseñado para la comunidad de AnxanWoman 💙
     </footer>
   </main>
+
+  <!-- Barra redes fija -->
+  <div class="social-bar">
+    <div class="social-inner">
+      <span class="social-left">Sígueme en redes para no perderte nada:</span>
+      <div class="social-row">
+        <a class="social-link" href="https://www.youtube.com/@AnxanWoman" target="_blank" rel="noopener">
+          <span class="icon-circle icon-youtube">▶</span>
+          <span>YouTube · AnxanWoman</span>
+        </a>
+        <a class="social-link" href="https://www.twitch.tv/AnxanWoman" target="_blank" rel="noopener">
+          <span class="icon-circle icon-twitch">T</span>
+          <span>Twitch · AnxanWoman</span>
+        </a>
+        <a class="social-link" href="https://www.tiktok.com/@anxanwoman" target="_blank" rel="noopener">
+          <span class="icon-circle icon-tiktok">♪</span>
+          <span>TikTok · AnxanWoman</span>
+        </a>
+      </div>
+      <span class="creator-code">Código de creador: <span>ANXANWOMAN</span></span>
+    </div>
+  </div>
 
   <!-- MODAL -->
   <div class="modal-backdrop" id="modalBackdrop">
@@ -465,6 +499,7 @@
       <div class="modal-meta">
         <span class="pill" id="modalDay">Día —</span>
         <span class="pill" id="modalType">Tipo: —</span>
+        <span class="pill" id="modalMode">Formato: —</span>
         <span class="pill" id="modalPrize">Premio: —</span>
       </div>
       <div class="modal-body" id="modalDescription"></div>
@@ -478,23 +513,25 @@
   <script>
     const YEAR = 2025;
 
-    // Config de días
+    // mode = "Directo" o "Clip"
+    const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26];
+
     const daysConfig = [
       { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario y explicación de normas.",        stream: 1  },
       { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto de Fortnite o dinámica de comunidad.",             stream: 2  },
       { day: 3,  type: "Reto Fortnite",             prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Reto en partida con sorteo pequeño si se cumple el objetivo.",stream: 3  },
       { day: 4,  type: "Guerra de outfits",         prize: "Aparecer en un short / mención",              description: "Outfits con la comunidad y mención especial al ganador.",     stream: 4  },
-      { day: 5,  type: "Reto / clips",              prize: "Sin premio económico",                        description: "Reacción a clips de la comunidad o reto decidido por el chat.",stream: 5  },
+      { day: 5,  type: "Reto / clips",              prize: "500 pavos para el ganador",                   description: "Modalidad privada temática con premio de 500 pavos para el ganador.",stream: 5  },
       { day: 6,  type: "Día chill / comunidad",     prize: "Sin premio económico",                        description: "Encuestas, memes y día relajado sumando entradas al sorteo final.",stream: 6  },
       { day: 7,  type: "Trivia + sorteo pequeño",   prize: "Premio pequeño (2–3€)",                       description: "Trivia de Fortnite con sorteo pequeño entre los acertantes.", stream: 7  },
       { day: 8,  type: "Reto navideño",             prize: "Sin premio económico",                        description: "Reto navideño en Fortnite con reglas elegidas por el chat.", stream: 8  },
-      { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa sorteada entre quienes cumplan la condición del directo.", stream: 9  },
+      { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa sorteada entre quienes cumplan la condición del directo o reto.", stream: 9  },
       { day: 10, type: "Fortnite pero…",            prize: "Sin premio económico",                        description: "Fortnite con reglas locas y entradas al sorteo final.",      stream: 10 },
       { day: 11, type: "Reto / comunidad",          prize: "Sin premio",                                  description: "Dinámica con la comunidad: outfits, clips o votaciones.",    stream: 11 },
       { day: 12, type: "Trivia",                    prize: "Premio pequeño opcional",                     description: "Trivia rápida, con opción de premio pequeño.",               stream: null },
       { day: 13, type: "Reto Fortnite",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte con sorteo mediano si se consigue.",             stream: null },
       { day: 14, type: "Shoutouts",                 prize: "Shoutout / mención",                          description: "Día de agradecimientos y menciones especiales.",             stream: null },
-      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o fail se lleva premio.",    stream: null },
+      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o fail se lleva un premio.", stream: null },
       { day: 16, type: "Día chill",                 prize: "Sin premio",                                  description: "Día tranquilo de charlas y encuestas.",                      stream: null },
       { day: 17, type: "Pistas premio final",       prize: "Sin premio",                                  description: "Pistas sobre el premio gordo de las campanadas.",            stream: null },
       { day: 18, type: "Reto navideño 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño con posible premio mediano.",          stream: null },
@@ -507,7 +544,10 @@
       { day: 25, type: "Sorteo Navidad",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad.",                                 stream: null },
       { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Recap de todo el calendario y hype para las campanadas.",    stream: null },
       { day: 27, type: "Campanadas",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas y sorteo final gordo.",       stream: null }
-    ];
+    ].map(cfg => ({
+      ...cfg,
+      mode: DIRECTO_DAYS.includes(cfg.day) ? "Directo" : "Clip"
+    }));
 
     const calendarGrid = document.getElementById("calendarGrid");
     const todayLabel = document.getElementById("todayLabel");
@@ -516,6 +556,7 @@
     const modalTitle = document.getElementById("modalTitle");
     const modalDay = document.getElementById("modalDay");
     const modalType = document.getElementById("modalType");
+    const modalMode = document.getElementById("modalMode");
     const modalPrize = document.getElementById("modalPrize");
     const modalDescription = document.getElementById("modalDescription");
 
@@ -531,8 +572,8 @@
     });
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
-    // Casillas abiertas (se guardan en localStorage)
-    const OPEN_KEY = "anxanwoman_calendario_opened_v2";
+    // Casillas abiertas
+    const OPEN_KEY = "anxanwoman_calendario_opened_v3";
     const openedSet = new Set(
       JSON.parse(localStorage.getItem(OPEN_KEY) || "[]")
     );
@@ -558,13 +599,13 @@
     function launchConfetti() {
       if (!window.confetti) return;
       confetti({
-        particleCount: 120,
-        spread: 70,
+        particleCount: 140,
+        spread: 75,
         origin: { y: 0.4 }
       });
       setTimeout(() => {
         confetti({
-          particleCount: 80,
+          particleCount: 90,
           spread: 60,
           origin: { y: 0.7 }
         });
@@ -572,10 +613,11 @@
     }
 
     function openModalForDay(config) {
-      const { day, type, prize, description } = config;
+      const { day, type, prize, description, mode } = config;
       modalTitle.textContent = `Día ${day}`;
       modalDay.textContent = `Día ${day}`;
       modalType.textContent = `Tipo: ${type}`;
+      modalMode.textContent = `Formato: ${mode}`;
       modalPrize.textContent = `Premio: ${prize}`;
       modalDescription.textContent = description || "";
       modalBackdrop.classList.add("visible");
@@ -608,12 +650,10 @@
       return card;
     }
 
-    // Pintar casillas
     daysConfig.forEach(cfg => {
       calendarGrid.appendChild(createDayCard(cfg));
     });
 
-    // Cerrar modal clicando fuera de la tarjeta
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) {
         modalBackdrop.classList.remove("visible");
