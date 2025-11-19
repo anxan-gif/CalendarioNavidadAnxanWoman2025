@@ -21,10 +21,7 @@
       --accent-soft: rgba(96, 165, 255, 0.18);
       --text: #f9fafb;
       --muted: #9ca3af;
-      --locked: #4b5563;
       --radius-lg: 22px;
-      --radius-md: 16px;
-      --border-soft: rgba(148, 163, 184, 0.4);
     }
 
     * {
@@ -170,7 +167,7 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     @media (max-width: 600px) {
@@ -181,9 +178,9 @@
 
     .day {
       position: relative;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 10px;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -198,15 +195,14 @@
         transform 0.12s ease-out,
         box-shadow 0.12s ease-out,
         border-color 0.12s ease-out,
-        background 0.12s ease-out,
-        opacity 0.12s;
-      font-size: 0.82rem;
+        background 0.12s ease-out;
+      font-size: 0.88rem;
     }
 
     .day::before {
       content: "❄";
       position: absolute;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       right: 6px;
       top: 4px;
       opacity: 0.12;
@@ -225,68 +221,53 @@
         linear-gradient(145deg, #020617, #020617);
     }
 
-    .day-number {
-      font-weight: 600;
-      font-size: 1.05rem;
-    }
-
-    .day-label-line {
+    .day-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 4px;
-    }
-
-    .day-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
+      font-size: 0.75rem;
       color: var(--muted);
-      max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    .day-stream {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(249, 115, 22, 0.9);
-      background: rgba(249, 115, 22, 0.12);
-      color: var(--accent-2);
-      white-space: nowrap;
+    .day-number-label {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .day-type {
+      max-width: 60%;
+      text-align: right;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      opacity: 0.85;
+    }
+
+    .day-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-stream-number {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow:
+        0 0 12px rgba(255, 255, 255, 0.9),
+        0 0 24px rgba(96, 165, 250, 0.9);
     }
 
     .day-tag {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       padding: 3px 7px;
       border-radius: 999px;
       align-self: flex-start;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      color: var(--muted);
-    }
-
-    .day.unlocked .day-tag {
       background: var(--accent-soft);
-      border-color: rgba(96, 165, 250, 0.95);
+      border: 1px solid rgba(96, 165, 250, 0.95);
       color: var(--accent);
-    }
-
-    .day.today {
-      box-shadow:
-        0 0 0 1px rgba(96, 165, 250, 1),
-        0 0 22px rgba(96, 165, 250, 0.65);
-      border-color: rgba(96, 165, 250, 1);
-    }
-
-    .day.today::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top, rgba(96, 165, 250, 0.18), transparent);
-      pointer-events: none;
     }
 
     .hint {
@@ -308,6 +289,19 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+
+    .details[data-has-selection="false"] .details-title,
+    .details[data-has-selection="false"] .details-meta,
+    .details[data-has-selection="false"] .details-description,
+    .details[data-has-selection="false"] .details-note {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .details[data-has-selection="false"] {
+      border-style: dashed;
+      border-color: rgba(75, 85, 99, 0.8);
     }
 
     .details-title {
@@ -332,12 +326,6 @@
       color: #4ade80;
       border: 1px solid rgba(34, 197, 94, 0.9);
       box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-    }
-
-    .details-status.locked {
-      background: rgba(31, 41, 55, 0.9);
-      color: var(--muted);
-      border: 1px solid rgba(75, 85, 99, 0.9);
     }
 
     .details-meta {
@@ -373,9 +361,138 @@
       color: rgba(148, 163, 184, 0.7);
       text-align: right;
     }
+
+    /* ---------- INTRO OVERLAY (portada) ---------- */
+
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #f97316 0, transparent 55%),
+        #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      cursor: pointer;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .intro-inner {
+      width: min(900px, 96vw);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+      border-radius: 28px;
+      padding: 22px 20px 16px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow:
+        0 0 40px rgba(15, 23, 42, 0.9),
+        0 0 80px rgba(96, 165, 250, 0.35);
+    }
+
+    .intro-title {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .intro-title h2 {
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(96, 165, 250, 0.8);
+    }
+
+    .intro-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .intro-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 650px) {
+      .intro-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .intro-day {
+      border-radius: 18px;
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background:
+        radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.24), transparent 60%),
+        linear-gradient(145deg, #020617, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(96, 165, 250, 0.9);
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+      animation: popIn 0.6s ease-out forwards;
+      animation-delay: calc(var(--i) * 0.04s);
+    }
+
+    .intro-hint {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .intro-hint span {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .intro-overlay.hidden {
+      animation: fadeOut 0.35s ease-in forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(10px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
   </style>
 </head>
 <body>
+  <!-- Portada animada -->
+  <div class="intro-overlay" id="introOverlay">
+    <div class="intro-inner">
+      <div class="intro-title">
+        <h2>CALENDARIO DE ADVIENTO · ANXANWOMAN</h2>
+        <p class="intro-sub">Haz clic en cualquier parte para empezar</p>
+      </div>
+      <div class="intro-grid" id="introGrid">
+        <!-- Se rellena con números 1–27 desde JS -->
+      </div>
+      <p class="intro-hint">
+        <span>Click</span> para abrir la interfaz del calendario.
+      </p>
+    </div>
+  </div>
+
   <main class="app">
     <header>
       <div class="title-block">
@@ -404,15 +521,15 @@
           <!-- Las casillas se crean con JavaScript -->
         </div>
         <p class="hint">
-          Todas las casillas están <strong>desbloqueadas</strong> en modo prueba. En directo puedes abrir solo la que elija el chat.
+          Todas las casillas están <strong>desbloqueadas</strong> en modo prueba. En directo abre solo la que elija el chat.
         </p>
       </section>
 
       <!-- Panel de detalles -->
-      <section class="details" id="detailsPanel">
+      <section class="details" id="detailsPanel" data-has-selection="false">
         <div class="details-title">
           <h2 id="detailsTitle">Selecciona una casilla</h2>
-          <span class="details-status locked" id="detailsStatus">—</span>
+          <span class="details-status unlocked" id="detailsStatus">Desbloqueado</span>
         </div>
         <div class="details-meta">
           <span class="pill" id="detailsDay">Día —</span>
@@ -420,10 +537,10 @@
           <span class="pill" id="detailsPrize">Premio: —</span>
         </div>
         <p class="details-description" id="detailsDescription">
-          Haz clic en una casilla del calendario para ver qué reto, evento o premio se desbloquea ese día.
+          …
         </p>
         <p class="details-note">
-          Tip: durante el directo, deja que el chat elija el número de casilla y ábrela en esta página en directo.
+          Tip: deja que el chat elija el número de casilla y ábrela en esta página en directo.
         </p>
       </section>
     </section>
@@ -434,11 +551,9 @@
   </main>
 
   <script>
-    // Año del calendario
     const YEAR = 2025;
 
-    // Configuración de cada día.
-    // "stream" indica número de directo (1–11) según tu dibujo en rojo.
+    // Configuración de días (igual que antes)
     const daysConfig = [
       { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario, explicación de normas y primer reto suave con el chat.",        stream: 1  },
       { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto Fortnite o dinámica de comunidad. El chat desbloquea qué se hará mañana.",         stream: 2  },
@@ -451,26 +566,27 @@
       { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa revelada al final. Se sortea entre quienes cumplan el requisito del directo.", stream: 9  },
       { day: 10, type: "Fortnite pero…",            prize: "Sin premio económico",                        description: "Formato \"Fortnite pero\" con reglas locas y entradas al sorteo final.",                     stream: 10 },
       { day: 11, type: "Reto / comunidad",          prize: "Sin premio",                                  description: "Dinámica con la comunidad: outfits, clips o votaciones. Suma hype para los siguientes días.", stream: 11 },
-      { day: 12, type: "Trivia / evento",           prize: "Premio pequeño opcional",                     description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas.",               stream: null },
-      { day: 13, type: "Reto Fortnite",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat.",                     stream: null },
-      { day: 14, type: "Shoutouts",                 prize: "Shoutout / mención",                          description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales.",              stream: null },
-      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño.",                   stream: null },
-      { day: 16, type: "Día chill",                 prize: "Sin premio",                                  description: "Descanso relativo: charlas, encuestas, hype para lo que viene.",                            stream: null },
-      { day: 17, type: "Pistas del premio final",   prize: "Sin premio",                                  description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas.",                  stream: null },
-      { day: 18, type: "Reto navideño 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja.",                    stream: null },
-      { day: 19, type: "Trivia + sorteo",           prize: "Premio pequeño",                              description: "Trivia rápida; quienes acierten entran en sorteo peque.",                                   stream: null },
-      { day: 20, type: "Mensaje navideño",          prize: "Sin premio",                                  description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora.",                     stream: null },
-      { day: 21, type: "Sorteo pre-final",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.",                                  stream: null },
-      { day: 22, type: "Reto 24h",                  prize: "Entrada al sorteo final",                     description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa.",    stream: null },
+      { day: 12, type: "TRIVIA",                    prize: "Premio pequeño opcional",                     description: "Mini juego o trivia rápida. Puedes dar o no un premio pequeño según te veas.",               stream: null },
+      { day: 13, type: "RETO FORTNITE",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte de Fortnite: si lo cumples, sorteo mediano entre el chat.",                     stream: null },
+      { day: 14, type: "SHOUTOUTS",                 prize: "Shoutout / mención",                          description: "Día para agradecer a la comunidad, leer mensajes y dar menciones especiales.",              stream: null },
+      { day: 15, type: "CLIP CHALLENGE",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o mejor fail se lleva un premio pequeño.",                   stream: null },
+      { day: 16, type: "DÍA CHILL",                 prize: "Sin premio",                                  description: "Descanso relativo: charlas, encuestas, hype para lo que viene.",                            stream: null },
+      { day: 17, type: "PISTAS PREMIO",             prize: "Sin premio",                                  description: "Día de pistas: sueltas detalles sobre el premio gordo de las campanadas.",                  stream: null },
+      { day: 18, type: "RETO NAVIDEÑO 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño. Puedes dar un premio mediano si ves que encaja.",                    stream: null },
+      { day: 19, type: "TRIVIA + SORTEO",           prize: "Premio pequeño",                              description: "Trivia rápida; quienes acierten entran en sorteo peque.",                                   stream: null },
+      { day: 20, type: "MENSAJE NAVIDEÑO",          prize: "Sin premio",                                  description: "Día más emocional, agradecimientos y resumen de lo vivido hasta ahora.",                     stream: null },
+      { day: 21, type: "SORTEO PRE-FINAL",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.",                                  stream: null },
+      { day: 22, type: "RETO 24H",                  prize: "Entrada al sorteo final",                     description: "Reto rápido (por publicación / comunidad) con entrada al sorteo final como recompensa.",    stream: null },
       { day: 23, type: "PRE-GORDO",                 prize: "Premio ~10€ (skin grande)",                   description: "Premio pre-gordo: sorteo de una skin grande entre la comunidad.",                           stream: null },
-      { day: 24, type: "Día simbólico",             prize: "Premio simbólico / mención",                  description: "Día más navideño, quizá con un regalito simbólico o mención especial.",                     stream: null },
-      { day: 25, type: "Sorteo de Navidad",         prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto.",                          stream: null },
-      { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Repaso de todo el calendario y hype máximo para las campanadas.",                           stream: null },
-      { day: 27, type: "Campanadas + premio gordo", prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025.",    stream: null }
+      { day: 24, type: "DÍA SIMBÓLICO",             prize: "Premio simbólico / mención",                  description: "Día más navideño, quizá con un regalito simbólico o mención especial.",                     stream: null },
+      { day: 25, type: "SORTEO NAVIDAD",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad con premio ajustado a tu presupuesto.",                          stream: null },
+      { day: 26, type: "RECAP + HYPE",              prize: "Sin premio económico",                        description: "Repaso de todo el calendario y hype máximo para las campanadas.",                           stream: null },
+      { day: 27, type: "CAMPANADAS",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas, resumen del año y sorteo final grande para cerrar 2025.",    stream: null }
     ];
 
     const calendarGrid = document.getElementById("calendarGrid");
     const todayLabel = document.getElementById("todayLabel");
+    const detailsPanel = document.getElementById("detailsPanel");
 
     const detailsTitle = document.getElementById("detailsTitle");
     const detailsStatus = document.getElementById("detailsStatus");
@@ -479,10 +595,9 @@
     const detailsPrize = document.getElementById("detailsPrize");
     const detailsDescription = document.getElementById("detailsDescription");
 
-    // Fecha actual (solo para mostrar "Hoy", no para bloquear)
+    // Fecha actual solo para mostrar "Hoy"
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
     const formatter = new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
       month: "short",
@@ -492,45 +607,38 @@
 
     function createDayCard(config) {
       const { day, type, prize, description, stream } = config;
-      const date = new Date(YEAR, 11, day); // mes 11 = diciembre
 
-      // 🔓 MODO PRUEBA: todo desbloqueado
-      const isUnlocked = true;
+      const card = document.createElement("button");
+      card.className = "day";
 
-      // Para resaltar el día actual cuando sea diciembre
       const isToday =
         today.getFullYear() === YEAR &&
         today.getMonth() === 11 &&
         today.getDate() === day;
 
-      const card = document.createElement("button");
-      card.className = "day unlocked";
       if (isToday) card.classList.add("today");
 
-      card.dataset.day = day;
-      card.dataset.type = type;
-      card.dataset.prize = prize;
-      card.dataset.description = description;
-
       card.innerHTML = `
-        <div class="day-number">Día ${day}</div>
-        <div class="day-label-line">
-          <span class="day-label">${type}</span>
-          ${stream ? `<span class="day-stream">Directo #${stream}</span>` : ""}
+        <div class="day-header">
+          <span class="day-number-label">Día ${day}</span>
+          <span class="day-type">${type}</span>
+        </div>
+        <div class="day-center">
+          ${stream ? `<span class="day-stream-number">${stream}</span>` : ""}
         </div>
         <div class="day-tag">Disponible</div>
       `;
 
       card.addEventListener("click", () => {
+        detailsPanel.setAttribute("data-has-selection", "true");
         detailsTitle.textContent = stream
-          ? `Día ${day} · ${type} · Directo #${stream}`
+          ? `Día ${day} · ${type} · Directo ${stream ? "#" + stream : ""}`
           : `Día ${day} · ${type}`;
         detailsStatus.textContent = "Desbloqueado";
-        detailsStatus.classList.remove("locked");
         detailsStatus.classList.add("unlocked");
         detailsDay.textContent = `Día ${day}`;
         detailsType.textContent = stream
-          ? `Tipo: ${type} · Directo #${stream}`
+          ? `Tipo: ${type} · ${stream ? "Directo #" + stream : ""}`
           : `Tipo: ${type}`;
         detailsPrize.textContent = `Premio: ${prize}`;
         detailsDescription.textContent = description;
@@ -539,9 +647,30 @@
       return card;
     }
 
-    // Pintar los días 1–27
+    // Pintar días
     daysConfig.forEach((config) => {
       calendarGrid.appendChild(createDayCard(config));
+    });
+
+    // -------- Intro overlay lógica --------
+    const introOverlay = document.getElementById("introOverlay");
+    const introGrid = document.getElementById("introGrid");
+
+    // Rellenar cuadritos 1–27
+    daysConfig.forEach((cfg, index) => {
+      const d = document.createElement("div");
+      d.className = "intro-day";
+      d.textContent = cfg.day;
+      d.style.setProperty("--i", index.toString());
+      introGrid.appendChild(d);
+    });
+
+    // Ocultar overlay al hacer click en cualquier sitio de la portada
+    introOverlay.addEventListener("click", () => {
+      introOverlay.classList.add("hidden");
+      setTimeout(() => {
+        introOverlay.style.display = "none";
+      }, 350);
     });
   </script>
 </body>
