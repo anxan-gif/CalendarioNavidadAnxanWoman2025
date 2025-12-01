@@ -10,9 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
   <style>
     :root {
       --bg-1: #020617;
@@ -24,8 +21,8 @@
       --muted: #9ca3af;
       --radius-lg: 24px;
 
-      --directo: #fb7185; /* rosa/rojizo */
-      --clip: #22c55e;    /* verde */
+      --directo: #fb7185;
+      --clip: #22c55e;
     }
 
     * {
@@ -87,35 +84,7 @@
       z-index: -2;
     }
 
-    /* Luces generales de la app */
-    .app-lights {
-      position: absolute;
-      inset: 4px;
-      border-radius: 32px;
-      pointer-events: none;
-      opacity: 0.2;
-      background:
-        radial-gradient(circle, #f97316 2px, transparent 4px),
-        radial-gradient(circle, #22c55e 2px, transparent 4px),
-        radial-gradient(circle, #60a5ff 2px, transparent 4px),
-        radial-gradient(circle, #e879f9 2px, transparent 4px);
-      background-repeat: repeat-x, repeat-x, repeat-x, repeat-x;
-      background-position:
-        top left,
-        bottom left,
-        left top,
-        right top;
-      background-size: 30px 10px, 28px 10px, 26px 10px, 32px 10px;
-      mix-blend-mode: screen;
-      animation: lights-wave 6s linear infinite;
-      z-index: -1;
-    }
-
-    html.navidad-off .app-lights {
-      opacity: 0;
-    }
-
-    /* Nieve realista (copos grandes, profundidad) */
+    /* Nieve ligera y realista */
     .snow-layer {
       position: fixed;
       inset: 0;
@@ -279,7 +248,6 @@
       font-size: 0.78rem;
     }
 
-    /* Contador global 27 */
     .global-countdown {
       margin-top: 6px;
       padding: 6px 10px;
@@ -365,7 +333,6 @@
       font-weight: 700;
     }
 
-    /* Filtros */
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -493,7 +460,7 @@
     }
 
     .day.opened {
-      opacity: 0.88;
+      opacity: 0.9;
       border-color: rgba(250, 204, 21, 0.95);
       box-shadow:
         0 0 0 1px rgba(250, 204, 21, 0.9),
@@ -517,23 +484,6 @@
       100% { transform: scale(1); }
     }
 
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      border-radius: 999px;
-      background: #38bdf8;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
-      pointer-events: none;
-      animation: particle-pop 0.6s ease-out forwards;
-    }
-
-    @keyframes particle-pop {
-      0% { opacity: 1; transform: translate(0, 0) scale(1); }
-      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4); }
-    }
-
-    /* Destellos */
     .flash-directo {
       animation: flashDirecto 0.5s ease-out;
     }
@@ -565,12 +515,11 @@
       padding-right: 4px;
     }
 
-    /* Luces del calendario */
     .lights {
       position: absolute;
       inset: 8px;
       pointer-events: none;
-      opacity: 0.2;
+      opacity: 0.18;
       background:
         radial-gradient(circle, #f97316 2px, transparent 4px),
         radial-gradient(circle, #22c55e 2px, transparent 4px),
@@ -584,8 +533,8 @@
         right top;
       background-size: 26px 8px, 24px 8px, 22px 8px, 28px 8px;
       mix-blend-mode: screen;
-      z-index: -1;
       animation: lights-wave 6s linear infinite;
+      z-index: -1;
     }
 
     @keyframes lights-wave {
@@ -596,8 +545,6 @@
     html.navidad-off .lights {
       opacity: 0;
     }
-
-    /* -------- MODAL DÍA -------- */
 
     .modal-backdrop {
       position: fixed;
@@ -682,7 +629,7 @@
     }
 
     .modal-countdown {
-      display: none; /* no usamos countdown dentro del modal */
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -694,8 +641,6 @@
       0% { opacity: 0; transform: translateY(10px) scale(0.97); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-
-    /* -------- MODAL INFO / STATS -------- */
 
     .info-backdrop,
     .stats-backdrop {
@@ -778,7 +723,6 @@
       color: var(--muted);
     }
 
-    /* -------- TOAST -------- */
     .toast {
       position: fixed;
       bottom: 18px;
@@ -817,8 +761,6 @@
         font-size: 1.7rem;
       }
     }
-
-    /* -------- SECCIÓN REGALOS Y REDES -------- */
 
     .scene-bottom {
       margin-top: 22px;
@@ -913,7 +855,6 @@
       text-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
     }
 
-    /* Popup redes flotante */
     .social-popup {
       position: fixed;
       bottom: 20px;
@@ -957,12 +898,9 @@
   </style>
 </head>
 <body>
-  <!-- Nieve realista -->
   <div class="snow-layer"></div>
 
   <main class="app">
-    <div class="app-lights"></div>
-
     <header>
       <div class="title-block">
         <h1>
@@ -1017,9 +955,7 @@
         <button class="filter-btn" data-filter="clips">Clips</button>
       </div>
 
-      <div class="grid" id="calendarGrid">
-        <!-- casillas -->
-      </div>
+      <div class="grid" id="calendarGrid"></div>
     </section>
 
     <footer>
@@ -1058,7 +994,6 @@
     </section>
   </main>
 
-  <!-- MODAL DÍA -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal" id="modal">
       <div class="modal-header">
@@ -1075,7 +1010,6 @@
     </div>
   </div>
 
-  <!-- MODAL INFO -->
   <div class="info-backdrop" id="infoBackdrop">
     <div class="info-modal">
       <h3>¿Cómo funciona el calendario?</h3>
@@ -1093,7 +1027,6 @@
     </div>
   </div>
 
-  <!-- MODAL STATS -->
   <div class="stats-backdrop" id="statsBackdrop">
     <div class="stats-modal">
       <h3>Resumen del calendario</h3>
@@ -1115,7 +1048,6 @@
     </div>
   </div>
 
-  <!-- Popup redes flotante -->
   <div class="social-popup" id="socialPopup">
     <strong>¡Sígueme en redes! 💙</strong><br>
     <a href="https://www.youtube.com/@AnxanWoman" target="_blank" rel="noopener">▶ YouTube</a>
@@ -1128,44 +1060,289 @@
   <script>
     const YEAR = 2025;
 
-    const DIRECTO_DAYS = [1,3,5,7,8,10,12,14,15,17,19,21,22,26,27];
-    const BIG_PRIZE_DAYS = [9,21,23,27];
+    const DIRECTO_DAYS = [1,2,5,8,9,10,12,14,15,17,19,21,22,26,27];
+    const BIG_PRIZE_DAYS = [5,14,21,27];
 
     const baseConfig = [
-      { day: 1,  type: "Presentación",              prize: "Sin premio económico",                        description: "Presentación del calendario y explicación de normas.", vb: 0 },
-      { day: 2,  type: "Reto / contenido",          prize: "Sin premio económico",                        description: "Mini reto de Fortnite o dinámica de comunidad.", vb: 0 },
-      { day: 3,  type: "Reto Fortnite",             prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Reto en partida con sorteo pequeño si se cumple el objetivo.", vb: 300 },
-      { day: 4,  type: "Guerra de outfits",         prize: "Aparecer en un short / mención",              description: "Outfits con la comunidad y mención especial al ganador.", vb: 0 },
-      { day: 5,  type: "Reto / clips",              prize: "500 pavos para el ganador",                   description: "Modalidad privada temática con premio de 500 pavos para el ganador.", vb: 500 },
-      { day: 6,  type: "Día chill / comunidad",     prize: "Sin premio económico",                        description: "Encuestas, memes y día relajado sumando entradas al sorteo final.", vb: 0 },
-      { day: 7,  type: "Trivia + sorteo pequeño",   prize: "Premio pequeño (2–3€)",                       description: "Trivia de Fortnite con sorteo pequeño entre los acertantes.", vb: 300 },
-      { day: 8,  type: "Reto navideño",             prize: "Sin premio económico",                        description: "Reto navideño en Fortnite con reglas elegidas por el chat.", vb: 0 },
-      { day: 9,  type: "Skin misteriosa",           prize: "Premio mediano (5–7€)",                       description: "Skin misteriosa sorteada entre quienes cumplan la condición del reto o directo.", vb: 1000 },
-      { day: 10, type: "Fortnite pero…",            prize: "Sin premio económico",                        description: "Fortnite con reglas locas y entradas al sorteo final.", vb: 0 },
-      { day: 11, type: "Reto / comunidad",          prize: "Sin premio",                                  description: "Dinámica con la comunidad: outfits, clips o votaciones.", vb: 0 },
-      { day: 12, type: "Trivia",                    prize: "Premio pequeño opcional",                     description: "Trivia rápida, con opción de premio pequeño.", vb: 300 },
-      { day: 13, type: "Reto Fortnite",             prize: "Premio mediano (5–7€)",                       description: "Reto fuerte con sorteo mediano si se consigue.", vb: 1000 },
-      { day: 14, type: "Shoutouts",                 prize: "Shoutout / mención",                          description: "Día de agradecimientos y menciones especiales.", vb: 0 },
-      { day: 15, type: "Clip challenge",            prize: "Premio pequeño (emote / 200–300 pavos)",      description: "Concurso de clips: mejor jugada o fail se lleva un premio.", vb: 300 },
-      { day: 16, type: "Día chill",                 prize: "Sin premio",                                  description: "Día tranquilo de charlas y encuestas.", vb: 0 },
-      { day: 17, type: "Pistas premio final",       prize: "Sin premio",                                  description: "Pistas sobre el premio gordo de las campanadas.", vb: 0 },
-      { day: 18, type: "Reto navideño 2",           prize: "Premio mediano opcional",                     description: "Segundo reto navideño con posible premio mediano.", vb: 0 },
-      { day: 19, type: "Trivia + sorteo",           prize: "Premio pequeño",                              description: "Trivia con sorteo pequeño entre quienes acierten.", vb: 300 },
-      { day: 20, type: "Mensaje navideño",          prize: "Sin premio",                                  description: "Mensaje especial y resumen de lo vivido.", vb: 0 },
-      { day: 21, type: "Sorteo pre-final",          prize: "Premio mediano (5–7€)",                       description: "Sorteo importante antes del sprint final del calendario.", vb: 1000 },
-      { day: 22, type: "Reto 24h",                  prize: "Entrada al sorteo final",                     description: "Reto rápido por redes con entrada al sorteo final.", vb: 0 },
-      { day: 23, type: "Pre-gordo",                 prize: "Premio ~10€ (skin grande)",                   description: "Premio pre-gordo con skin grande para la comunidad.", vb: 1500 },
-      { day: 24, type: "Día simbólico",             prize: "Premio simbólico / mención",                  description: "Día navideño con detalle simbólico o mención.", vb: 0 },
-      { day: 25, type: "Sorteo Navidad",            prize: "Premio pequeño o mediano",                    description: "Sorteo especial de Navidad.", vb: 500 },
-      { day: 26, type: "Recap + hype",              prize: "Sin premio económico",                        description: "Recap de todo el calendario y hype para las campanadas.", vb: 0 },
-      { day: 27, type: "Campanadas",                prize: "Premio gordo (20–25€)",                       description: "Directo especial de campanadas y sorteo final gordo.", vb: 2800 }
+      {
+        day: 1,
+        type: "Presentación del calendario",
+        prize: "Sin premio económico",
+        description: `Día 1. Presentación del calendario.
+Estaré en directo a partir de las 18.30 (hora española) presentando el calendario de adviento de Fortnite, su función y mecánica.
+¡¡No te lo pierdas!!`,
+        vb: 0
+      },
+      {
+        day: 2,
+        type: "Directo Sorpresa",
+        prize: "Sin premio económico",
+        description: `Día 2. Directo Sorpresa
+¿Directo un martes? Oh Oh Oh, Feliz pre-Navidad.
+Nos vemos de 17.00 a 19.15 (hora española)`,
+        vb: 0
+      },
+      {
+        day: 3,
+        type: "Clip sorteo",
+        prize: "Participación en sorteo",
+        description: `Día 3. Clip Día de descanso.
+Renovación de ideas... PERO
+¡Atentos al clip de hoy!
+Si respondéis correctamente al short de Youtube o TikTok...
+¡Entras en un sorteo!`,
+        vb: 0
+      },
+      {
+        day: 4,
+        type: "Clip sorteo x2",
+        prize: "Participación doble en sorteo",
+        description: `Día 4. Clip Día de descanso
+Renovación de ideas... PERO
+¡Atentos al clip de hoy!
+Si respondéis correctamente al short de Youtube o TikTok...
+¡Entras en un sorteo!
+Además, si respondes correctamente al clip de ayer...
+PARTICIPACIÓN DOBLE`,
+        vb: 0
+      },
+      {
+        day: 5,
+        type: "Fashion Show",
+        prize: "Premio en pavos (top 3)",
+        description: `Día 5. Fashion Show
+Viernes de privadas temáticas... Primer viernes con... PREMIO
+A partir de las 18.00 (hora española) realizaremos un Fashion Show entre toda la comunidad.
+¡El top 3 tiene premio!
+
+Premios:
+Tercer premio - 500 pavos
+Segundo premio - 800 pavos
+Primer premio - 1200 pavos`,
+        vb: 2500
+      },
+      {
+        day: 6,
+        type: "Descanso + resumen",
+        prize: "Sin premio económico",
+        description: `Día 6. Día de descanso
+¡Atentos a mi canal hoy! Se viene un short del resumen de la privada de ayer.
+¿Saldrás en el vídeo? ¡Compruébalo!`,
+        vb: 0
+      },
+      {
+        day: 7,
+        type: "Resumen semanal",
+        prize: "Sin premio económico",
+        description: `Día 7. Resumen semanal
+¡Primera semana completada!
+¿Quieres ver qué premios, retos y privadas hemos realizado?
+¡Atentos al short resumen de la semana!
+Déjame por comentarios cuál fue vuestro momento favorito`,
+        vb: 0
+      },
+      {
+        day: 8,
+        type: "Directo IRL",
+        prize: "Sin premio económico",
+        description: `Día 8. Directo IRL
+Estoy en Madrid y no habrá directo de Fortnite... en cambio...
+¡SORPRESA! Mini directo IRL (en la vida real).
+Horario por confirmar - Recuerda activar las notificaciones para que te avise de mis directos`,
+        vb: 0
+      },
+      {
+        day: 9,
+        type: "¿Directo?",
+        prize: "Mención especial en siguiente directo",
+        description: `Día 9. ¿Directo?
+¡HOY SÍ! DIRECTO DE FORTNITE
+Horario: 17.00 - 19.15
+¡Día de privadas en Recarga! Los ganadores de cada privada... tendrán mención especial en el siguiente directo`,
+        vb: 0
+      },
+      {
+        day: 10,
+        type: "Directo sorpresa comunidad",
+        prize: "Sin premio económico",
+        description: `Día 10. Directo
+Hola Hola, hoy tenemos una sorpresa para toda la comunidad...
+Horario: 18.30 - 21.30`,
+        vb: 0
+      },
+      {
+        day: 11,
+        type: "Clip sorteo",
+        prize: "Más posibilidades en sorteo",
+        description: `Día 11. Clip
+¿Recuerdas los clips pasados de adivinar la respuesta? HOY OTRO DE REGALO.
+Más posibilidades si respondes a los 3 clips de esta temática.`,
+        vb: 0
+      },
+      {
+        day: 12,
+        type: "Privada temática",
+        prize: "Posible participación en sorteo",
+        description: `Día 12. PRIVADA TEMÁTICA`,
+        vb: 0
+      },
+      {
+        day: 13,
+        type: "Clip mejores momentos",
+        prize: "Sin premio económico",
+        description: `Día 13. Clip
+¿Quieres ver los mejores momentos de esta semana?
+Atent@ a mi contenido esta tarde. Seguramente salgas en el vídeo...`,
+        vb: 0
+      },
+      {
+        day: 14,
+        type: "Día de sorteo",
+        prize: "1200 pavos",
+        description: `Día 14. DÍA DE SORTEO
+Jugaremos al Fortnite... Sí... habrá privadas... TAMBIÉN
+PERO el premio es para 1 GANADOR.
+La persona que más puntos consiga en un QUIZ SOBRE ANXANWOMAN.
+
+Premio: 1200 pavos.`,
+        vb: 1200
+      },
+      {
+        day: 15,
+        type: "Directo",
+        prize: "Mención especial a ganadores",
+        description: `Día 15. DIRECTO
+Comenzamos la semana con unas partidas al Fortnite.
+En las privadas del directo, los ganadores llevan mención especial en el próximo directo.`,
+        vb: 0
+      },
+      {
+        day: 16,
+        type: "Clip sorteo",
+        prize: "Participación extra en sorteo",
+        description: `Día 16. CLIP
+Clip nº4 que podéis responder... correctamente y os dará una participación extra en el sorteo.
+¿Aún no sabes el premio? jeje, atent@ al próximo directo.`,
+        vb: 0
+      },
+      {
+        day: 17,
+        type: "Directo anuncio premio",
+        prize: "Sin premio directo",
+        description: `Día 17. DIRECTO
+Desvelamos en directo el día del sorteo y el PREMIO acumulado.
+En las privadas los ganadores se llevan mención especial durante el próximo directo.`,
+        vb: 0
+      },
+      {
+        day: 18,
+        type: "Clip anuncio sorteo",
+        prize: "Sin premio económico",
+        description: `Día 18. CLIP
+¿Clip de sorteo? ¡HOY NO!
+Clip anunciando fecha y hora del sorteo, cómo participar si te lo has perdido.
+¡¡QUÉ NERVIOS!!`,
+        vb: 0
+      },
+      {
+        day: 19,
+        type: "Privadas",
+        prize: "Menciones especiales",
+        description: `Día 19. PRIVADAS`,
+        vb: 0
+      },
+      {
+        day: 20,
+        type: "Clip resumen semana",
+        prize: "Sin premio económico",
+        description: `DÍA 20. CLIP
+Esta tarde clip resumen del contenido realizado esta semana.
+Si vuelves a aparecer esta semana...
+¡Eres un real de la comunidad! aunque seguro prefieres ser Unreal (¡Bdmmm tss!)`,
+        vb: 0
+      },
+      {
+        day: 21,
+        type: "Directo sorteo",
+        prize: "Premio sorteo de clips",
+        description: `Día 21. DIRECTO SORTEO
+Tercera semana de diciembre ya... UY
+Si hoy hay... ¡SORTEO!
+Mañana se celebra el sorteo de la Lotería de Navidad en España, y en mi comunidad, se realiza hoy jeje.
+Desvelamos qué persona que comentó los clips del sorteo se lleva el premio.`,
+        vb: 1200
+      },
+      {
+        day: 22,
+        type: "Directo si no soy millonaria",
+        prize: "Sin premio económico",
+        description: `Día 22. DIRECTO SI NO SOY MILLONARIA
+¡VAYA! ¡VAYA! Si estoy haciendo directo es que no me ha tocado el GORDO de navidad, aunque... afortunada de la comunidad que tengo.
+Directo 18.30 - 21.30 (hora española)`,
+        vb: 0
+      },
+      {
+        day: 23,
+        type: "Clip mejores momentos",
+        prize: "Sin premio económico",
+        description: `Día 23. Clip
+Clip de los mejores momentos del directo. ¿Apareces en el vídeo?`,
+        vb: 0
+      },
+      {
+        day: 24,
+        type: "Nochebuena",
+        prize: "Sin contenido en directo",
+        description: `Día 24. NOCHEBUENA
+Día de pasar con la familia. Hoy no hago directo, hay que disfrutar de estos momentos.`,
+        vb: 0
+      },
+      {
+        day: 25,
+        type: "Navidad",
+        prize: "Sin contenido en directo",
+        description: `Día 25. NAVIDAD
+¡Feliz Navidad a toda mi comunidad! Espero que lo hayáis pasado super bien estos dos días, y que no hayáis viciado mucho jeje`,
+        vb: 0
+      },
+      {
+        day: 26,
+        type: "Directo postnavidad",
+        prize: "Sin premio económico",
+        description: `Día 26. DIRECTO POSTNAVIDAD
+¡SOLO QUEDA UN DÍA! Comentamos en directo todo lo que va a suceder mañana... o casi todo jeje.
+¡HOY LAS ÚLTIMAS PRIVADAS DEL AÑO!`,
+        vb: 0
+      },
+      {
+        day: 27,
+        type: "Campanadas + gran sorteo",
+        prize: "Dos premios de 1800 pavos",
+        description: `Día 27. CAMPANADAS FIN DE AÑO ANXANWOMAN Y GRAN SORTEO
+LLEGÓ EL DÍA (más esperado, o menos... según lo veas...)
+Hoy tenemos... ¡PLANAZO!
+Directo a partir de las 18.00 (hora española).
+Comenzaremos reaccionando al REWIND 2025 de AnxanWoman.
+A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año con toda la gente maravillosa de esta comunidad.
+¡NO ME OLVIDO! SORTEAZO DOBLE. Hoy dos personas podrán ganar 1800 pavos para gastarse en la tienda de Fortnite.
+¿Habéis revisado si tenéis el código AnxanWoman en la tienda de Fortnite?`,
+        vb: 3600
+      }
     ];
 
-    const daysConfig = baseConfig.map(cfg => ({
-      ...cfg,
-      mode: DIRECTO_DAYS.includes(cfg.day) ? "Directo" : "Clip",
-      bigPrize: BIG_PRIZE_DAYS.includes(cfg.day)
-    }));
+    const daysConfig = baseConfig.map(cfg => {
+      let mode;
+      if (cfg.day === 24 || cfg.day === 25) {
+        mode = "Ninguno";
+      } else {
+        mode = DIRECTO_DAYS.includes(cfg.day) ? "Directo" : "Clip";
+      }
+      return {
+        ...cfg,
+        mode,
+        bigPrize: BIG_PRIZE_DAYS.includes(cfg.day)
+      };
+    });
 
     const calendarGrid = document.getElementById("calendarGrid");
     const todayLabel = document.getElementById("todayLabel");
@@ -1197,11 +1374,10 @@
     todayLabel.textContent = "Hoy: " + formatter.format(now);
 
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayDay = today.getMonth() === 11 ? today.getDate() : null;
-
+    const todayDay = (today.getMonth() === 11) ? today.getDate() : null;
     const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
 
-    const OPEN_KEY = "anxanwoman_calendario_opened_v5";
+    const OPEN_KEY = "anxanwoman_calendario_opened_v6";
     const openedSet = new Set(
       JSON.parse(localStorage.getItem(OPEN_KEY) || "[]")
     );
@@ -1210,7 +1386,6 @@
     const EGG_PREV_KEY = "anx_egg_prev_" + todayStr;
     const EGG_PRIZE_KEY = "anx_egg_prize_" + todayStr;
 
-    // contador de personas usando el código (empieza en 20, +5 cada semana)
     const CODE_USERS_KEY = "anx_code_users";
     const CODE_LAST_UPDATE_KEY = "anx_code_last_update";
 
@@ -1244,29 +1419,6 @@
       localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
     }
 
-    // (no hay sonidos)
-    function playSoundForDay(day) {}
-
-    function launchConfetti(big = false) {
-      if (!window.confetti) return;
-      const count = big ? 120 : 70;
-      const spread = big ? 70 : 55;
-      confetti({
-        particleCount: count,
-        spread: spread,
-        origin: { y: 0.4 }
-      });
-      if (big) {
-        setTimeout(() => {
-          confetti({
-            particleCount: 80,
-            spread: 60,
-            origin: { y: 0.7 }
-          });
-        }, 280);
-      }
-    }
-
     function openModalForDay(config) {
       const { day, type, prize, description, mode, vb } = config;
       modalTitle.textContent = `Día ${day}`;
@@ -1274,41 +1426,23 @@
       modalType.textContent = `Tipo: ${type}`;
       modalMode.textContent = `Formato: ${mode}`;
       modalMode.classList.remove("directo", "clip");
-      modalMode.classList.add("pill-mode", mode === "Directo" ? "directo" : "clip");
+      if (mode === "Directo") {
+        modalMode.classList.add("pill-mode", "directo");
+      } else if (mode === "Clip") {
+        modalMode.classList.add("pill-mode", "clip");
+      } else {
+        modalMode.classList.remove("pill-mode");
+      }
 
-      const hasPrize = vb > 0;
+      const hasPrize = vb && vb > 0;
       if (hasPrize) {
         modalPrize.innerHTML = `Premio: <span class="gold-prize">${prize}</span>`;
       } else {
         modalPrize.textContent = `Premio: ${prize}`;
       }
 
-      modalDescription.textContent = description || "";
-
+      modalDescription.innerHTML = (description || "").replace(/\n/g, "<br>");
       modalBackdrop.classList.add("visible");
-    }
-
-    function createParticles(card) {
-      const rect = card.getBoundingClientRect();
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      for (let i = 0; i < 6; i++) {
-        const p = document.createElement("span");
-        p.className = "particle";
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 24 + Math.random() * 10;
-        const dx = Math.cos(angle) * distance;
-        const dy = Math.sin(angle) * distance * -1;
-
-        p.style.setProperty("--dx", dx + "px");
-        p.style.setProperty("--dy", dy + "px");
-        p.style.left = centerX + "px";
-        p.style.top = centerY + "px";
-
-        card.appendChild(p);
-        setTimeout(() => p.remove(), 620);
-      }
     }
 
     function showToast(message) {
@@ -1342,7 +1476,10 @@
 
       if (isToday) card.classList.add("today");
 
-      const icon = config.mode === "Directo" ? "🎥" : "📱";
+      let icon;
+      if (config.mode === "Directo") icon = "🎥";
+      else if (config.mode === "Clip") icon = "📱";
+      else icon = "🎄";
 
       card.innerHTML = `
         <span class="day-icon">${icon}</span>
@@ -1353,13 +1490,22 @@
       card.addEventListener("click", (e) => {
         e.stopPropagation();
 
-        // Easter egg: casilla del día anterior (solo 1 vez por día)
+        // No abrir días futuros en diciembre 2025
+        if (
+          today.getFullYear() === YEAR &&
+          today.getMonth() === 11 &&
+          todayDay !== null &&
+          config.day > todayDay
+        ) {
+          showToast("Aún no puedes abrir esta casilla, espera a que llegue el día ✨");
+          return;
+        }
+
         if (todayDay && config.day === todayDay - 1 && !localStorage.getItem(EGG_PREV_KEY)) {
           showToast("Ups, esto ya ha ocurrido... Ojalá tener una máquina del tiempo 🔁");
           localStorage.setItem(EGG_PREV_KEY, "1");
         }
 
-        // Easter egg: casillas de premio grande en el futuro (solo 1 vez por día)
         if (config.bigPrize && todayDay && config.day > todayDay && !localStorage.getItem(EGG_PRIZE_KEY)) {
           showToast("¡Qué impaciente eres! Todo llega a su tiempo ⭐");
           localStorage.setItem(EGG_PRIZE_KEY, "1");
@@ -1374,21 +1520,10 @@
         card.classList.add("pop");
         setTimeout(() => card.classList.remove("pop"), 260);
 
-        createParticles(card);
-        playSoundForDay(config.day);
-
-        if (!wasOpenedBefore) {
-          if (config.day === 27) {
-            launchConfetti(true);
-          } else {
-            launchConfetti(false);
-          }
-        }
-
         if (config.mode === "Directo") {
           card.classList.add("flash-directo");
           setTimeout(() => card.classList.remove("flash-directo"), 500);
-        } else {
+        } else if (config.mode === "Clip") {
           card.classList.add("flash-clip");
           setTimeout(() => card.classList.remove("flash-clip"), 500);
         }
@@ -1399,26 +1534,22 @@
       return card;
     }
 
-    // Pintar casillas
     daysConfig.forEach(cfg => {
       calendarGrid.appendChild(createDayCard(cfg));
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
       openedSet.clear();
       saveOpened();
       document.querySelectorAll(".day.opened").forEach(el => el.classList.remove("opened"));
     });
 
-    // Modal cierre
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) {
         modalBackdrop.classList.remove("visible");
       }
     });
 
-    // Info modal
     infoBtn.addEventListener("click", () => {
       infoBackdrop.classList.add("visible");
     });
@@ -1429,7 +1560,6 @@
       }
     });
 
-    // Modo Navidad toggle
     function setNavidad(on) {
       if (on) {
         document.documentElement.classList.add("navidad-on");
@@ -1446,10 +1576,9 @@
       setNavidad(!isOn);
     });
 
-    // Stats
     function computeStats() {
       let totalVb = 0;
-      if (today.getMonth() === 11 && today.getFullYear() === YEAR) {
+      if (today.getMonth() === 11 && today.getFullYear() === YEAR && todayDay) {
         for (const cfg of daysConfig) {
           if (cfg.day <= todayDay) {
             totalVb += cfg.vb || 0;
@@ -1475,7 +1604,6 @@
       }
     });
 
-    // Filtros
     const filterButtons = document.querySelectorAll(".filter-btn");
     let currentFilter = "todos";
 
@@ -1502,7 +1630,6 @@
 
     applyFilter();
 
-    // Contador global 27 (activo ya)
     function updateGlobalCountdown() {
       const target = new Date(YEAR, 11, 27);
       const nowReal = new Date();
@@ -1521,7 +1648,6 @@
 
     updateGlobalCountdown();
 
-    // Stats solo 1 vez por día al entrar
     window.addEventListener("load", () => {
       if (!localStorage.getItem(STATS_SEEN_KEY)) {
         openStats();
@@ -1529,7 +1655,6 @@
       }
     });
 
-    // Popup de redes mientras haces scroll (oculto al final)
     const popup = document.getElementById("socialPopup");
     function togglePopup() {
       const scrollTop = window.scrollY;
@@ -1548,3 +1673,4 @@
   </script>
 </body>
 </html>
+
