@@ -1,335 +1,737 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Calendario de Adviento · AnxanWoman</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <title>Calendario de Adviento · AnxanWoman</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style>
-/* ————————————————
-   ESTILOS LIMPIOS (SIN NIEVE / SIN MODO NAVIDAD)
-   ———————————————— */
-
-:root {
-  --bg: #0f172a;
-  --panel: #1e293b;
-  --accent: #60a5fa;
-  --text: #f1f5f9;
-  --muted: #94a3b8;
-  --directo: #fb7185;
-  --clip: #22c55e;
-  --radius: 20px;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body {
-  background: radial-gradient(circle at top, #1e3a8a, #0f172a);
-  padding: 20px;
-  color: var(--text);
-}
-
-.app {
-  max-width: 1100px;
-  margin: auto;
-  background: var(--panel);
-  padding: 20px;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,.1);
-}
-
-h1 { font-size: 1.6rem; margin-bottom: 4px; }
-.subtitle { font-size: .85rem; color: var(--muted); margin-bottom: 15px; }
-
-.calendar {
-  background: #0f172a;
-  padding: 20px;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,.1);
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-}
-
-@media(max-width: 700px){ .grid { grid-template-columns: repeat(4,1fr);} }
-
-.day {
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 10px;
-  position: relative;
-  aspect-ratio: 1/1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,.1);
-  transition: .15s;
-}
-
-.day:hover { transform: translateY(-4px); }
-.day.opened { border-color: gold; box-shadow: 0 0 10px gold; }
-.day.special { border-color: gold; box-shadow: 0 0 20px gold; }
-
-.day-number-center {
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-.day-icon { position: absolute; top: 8px; left: 10px; font-size: 1.1rem; }
-.day-star { position: absolute; bottom: 8px; right: 10px; font-size: 1.2rem; }
-
-/* MODAL ——————— */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.7);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-backdrop.visible { display: flex; }
-.modal {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 16px;
-  max-width: 450px;
-  width: 90%;
-  border: 1px solid rgba(255,255,255,.2);
-  animation: pop .25s ease;
-}
-
-@keyframes pop {
-  0% { transform: scale(.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* TOAST CENTRAL (MENSAJES DE CASILLA FUTURA) */
-.center-toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #1e293b;
-  padding: 18px 22px;
-  border-radius: 14px;
-  font-size: .9rem;
-  border: 1px solid rgba(255,255,255,.2);
-  z-index: 2000;
-  opacity: 0;
-  animation: fadeIn .25s forwards;
-  text-align: center;
-  max-width: 300px;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -46%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
-}
-
-.filter-btn {
-  padding: 6px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: #1e293b;
-  color: var(--muted);
-  cursor: pointer;
-}
-.filter-btn.active { border-color: var(--accent); color: var(--accent); }
-</style>
-</head>
-<body>
-<div class="app">
-  <h1>🎄 Calendario de Adviento · AnxanWoman</h1>
-  <p class="subtitle">Haz clic en una casilla para ver el evento del día</p>
-
-  <div class="calendar">
-    <div class="filters">
-      <button class="filter-btn active" data-filter="todos">Todos</button>
-      <button class="filter-btn" data-filter="directos">Directos</button>
-      <button class="filter-btn" data-filter="clips">Clips</button>
-    </div>
-
-    <div class="grid" id="calendarGrid"></div>
-  </div>
-</div>
-
-<!-- MODAL PRINCIPAL -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" id="modal">
-    <h2 id="modalTitle">Día X</h2>
-    <p id="modalDesc" style="margin-top:10px; line-height:1.5;"></p>
-  </div>
-</div>
-
-<script>
-const YEAR = 2025;
-
-const DIRECTO_DAYS = [1,2,5,8,9,10,12,14,15,17,19,21,22,26,27];
-const BIG_PRIZE_DAYS = [5,14,21,27];
-
-/* ————— CONFIGURACIÓN DE DÍAS ————— */
-const days = {
-1:`Presentación del calendario.<br><br>Directo 18:30 (España).`,
-2:`Directo sorpresa.<br>17:00 - 19:15`,
-3:`Clip + sorteo.`,
-4:`Clip + participación doble.`,
-5:`Fashion Show con premios:<br>1200 / 800 / 500 pavos`,
-6:`Short resumen del Fashion Show.`,
-7:`Clip resumen semanal.`,
-8:`Mini directo IRL en Madrid.`,
-9:`Directo Fortnite: privadas 17:00 - 19:15`,
-10:`Directo sorpresa comunidad 18:30 - 21:30`,
-11:`Clip especial: adivina respuesta.`,
-12:`Privada temática.`,
-13:`Clip mejores momentos.`,
-14:`Día de sorteo: 1200 pavos.`,
-15:`Directo Fortnite + menciones.`,
-16:`Clip nº4 + participación extra.`,
-17:`Directo: anuncio del sorteo final.`,
-18:`Clip anuncio del sorteo.`,
-19:`Privadas.`,
-20:`Clip resumen semanal.`,
-21:`DIRECTO SORTEO (Lotería).`,
-22:`Directo 18:30 - 21:30`,
-23:`Clip mejores momentos.`,
-24:`NOCHEBUENA (descanso).`,
-25:`NAVIDAD (descanso).`,
-26:`Directo postnavidad.`,
-27:`Campanadas + REWIND + Sorteo doble de 1800 pavos.`
-};
-
-/* ————— GENERAR CALENDARIO ————— */
-const grid = document.getElementById("calendarGrid");
-const modalBackdrop = document.getElementById("modalBackdrop");
-const modalTitle = document.getElementById("modalTitle");
-const modalDesc = document.getElementById("modalDesc");
-
-const todayReal = new Date();
-const todayIsDec = todayReal.getMonth() === 11 && todayReal.getFullYear() === YEAR;
-const todayDay = todayIsDec ? todayReal.getDate() : null;
-
-function showCenterToast(msg){
-  const t = document.createElement("div");
-  t.className = "center-toast";
-  t.innerHTML = msg;
-  document.body.appendChild(t);
-  setTimeout(()=> t.remove(), 2200);
-}
-
-function createCard(day){
-  const btn = document.createElement("div");
-  btn.className = "day";
-  btn.dataset.day = day;
-
-  const mode = DIRECTO_DAYS.includes(day) ? "directo" : (day===24||day===25?"none":"clip");
-  const icon = mode === "directo" ? "🎥" : mode==="clip" ? "📱" : "🎄";
-
-  if (BIG_PRIZE_DAYS.includes(day)) btn.innerHTML += `<span class='day-star'>⭐</span>`;
-
-  btn.innerHTML += `
-    <span class="day-icon">${icon}</span>
-    <span class="day-number-center">${day}</span>
-  `;
-
-  if(day === 27) btn.classList.add("special");
-
-  btn.addEventListener("click", () =>{
-
-    if(todayIsDec && day > todayDay){
-      showCenterToast("Aún no puedes abrir esta casilla ✨");
-      return;
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0b1220;
+      --panel-alt: #020617;
+      --accent: #60a5fa;
+      --text: #f9fafb;
+      --muted: #94a3b8;
+      --directo: #fb7185;
+      --clip: #22c55e;
+      --radius: 20px;
     }
 
-    modalTitle.textContent = `Día ${day}`;
-    modalDesc.innerHTML = days[day].replace(/
-/g,"<br>");
-    modalBackdrop.classList.add("visible");
-  });
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-  return btn;
-}
-or (let i=1;i<=27;i++) grid.appendChild(createCard(i));
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 50%),
+                  radial-gradient(circle at 100% 100%, #0f766e 0, transparent 55%),
+                  linear-gradient(160deg, #020617, #020617 60%, #020617);
+      color: var(--text);
+      padding: 18px 10px 30px;
+    }
 
-modalBackdrop.addEventListener("click", (e)=>{
-  if(e.target===modalBackdrop) modalBackdrop.classList.remove("visible");
-});
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #020617;
+      border-radius: 28px;
+      border: 1px solid rgba(148,163,184,.5);
+      box-shadow:
+        0 0 40px rgba(15,23,42,.9),
+        0 0 80px rgba(30,64,175,.4);
+      padding: 16px 18px 18px;
+    }
 
-/* ————— FILTROS ————— */
-const filterBtns = document.querySelectorAll(".filter-btn");
-filterBtns.forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    filterBtns.forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
+    header {
+      background: #020617;
+      border-radius: 22px;
+      padding: 14px 18px;
+      border: 1px solid rgba(30,64,175,.5);
+      margin-bottom: 12px;
+    }
 
-    const f = btn.dataset.filter;
+    h1 {
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
 
-    document.querySelectorAll(".day").forEach(card=>{
-      const d = Number(card.dataset.day);
-      const mode = DIRECTO_DAYS.includes(d) ? "directos" : "clips";
+    h1 span.emoji {
+      font-size: 1.7rem;
+    }
 
-      card.style.opacity = 1;
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
 
-      if(f!=="todos" && f!==mode) card.style.opacity = .35;
+    .calendar {
+      background: #020617;
+      padding: 16px 16px 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(15,23,42,.9);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,.9);
+      background: #020617;
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(96,165,250,.5);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .day {
+      position: relative;
+      background: #020617;
+      border-radius: 18px;
+      padding: 10px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid rgba(31,41,55,.9);
+      transition: 0.15s;
+      overflow: hidden;
+    }
+
+    .day:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(15,23,42,.9);
+      border-color: rgba(96,165,250,.9);
+    }
+
+    .day.opened {
+      border-color: gold;
+      box-shadow:
+        0 0 0 1px rgba(250,204,21,.9),
+        0 0 16px rgba(250,204,21,.8);
+    }
+
+    .day.special {
+      border-color: gold;
+      box-shadow:
+        0 0 0 1px rgba(250,204,21,.9),
+        0 0 20px rgba(250,204,21,.8);
+    }
+
+    .day.today {
+      border-color: var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(96,165,250,.9),
+        0 0 16px rgba(96,165,250,.5);
+    }
+
+    .day.dimmed {
+      opacity: 0.35;
+      filter: grayscale(0.4);
+    }
+
+    .day-number-center {
+      font-size: 1.9rem;
+      font-weight: 800;
+      text-shadow: 0 0 12px rgba(255,255,255,.6);
+    }
+
+    .day-icon {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-size: 1.2rem;
+    }
+
+    .day-star {
+      position: absolute;
+      bottom: 7px;
+      right: 10px;
+      font-size: 1.2rem;
+      text-shadow: 0 0 10px rgba(250,204,21,.9);
+    }
+
+    .flash-directo {
+      animation: flashDirecto 0.4s ease-out;
+    }
+
+    .flash-clip {
+      animation: flashClip 0.4s ease-out;
+    }
+
+    @keyframes flashDirecto {
+      0% { box-shadow: 0 0 0 0 rgba(248,113,113,.9); }
+      100% { box-shadow: 0 0 18px 6px rgba(248,113,113,0); }
+    }
+
+    @keyframes flashClip {
+      0% { box-shadow: 0 0 0 0 rgba(34,197,94,.9); }
+      100% { box-shadow: 0 0 18px 6px rgba(34,197,94,0); }
+    }
+
+    /* MODAL PRINCIPAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,.6);
+      padding: 18px 18px 14px;
+      max-width: 480px;
+      width: 92%;
+      animation: popModal .25s ease-out;
+    }
+
+    @keyframes popModal {
+      0% { opacity: 0; transform: translateY(10px) scale(.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal h2 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .modal .meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .modal .meta span {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,.9);
+      background: #020617;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .modal .meta .directo {
+      border-color: rgba(248,113,113,.9);
+      color: #fecaca;
+    }
+
+    .modal .meta .clip {
+      border-color: rgba(34,197,94,.9);
+      color: #bbf7d0;
+    }
+
+    .modal .meta .gold {
+      border-color: rgba(250,204,21,.9);
+      color: #facc15;
+    }
+
+    .modal-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #e5e7eb;
+    }
+
+    /* TOAST CENTRAL */
+    .center-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #020617;
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.8);
+      box-shadow:
+        0 16px 40px rgba(0,0,0,.9),
+        0 0 18px rgba(96,165,250,.4);
+      font-size: 0.9rem;
+      text-align: center;
+      max-width: 320px;
+      z-index: 2000;
+      opacity: 0;
+      animation: toastIn .25s forwards;
+    }
+
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translate(-50%, -46%); }
+      100% { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .bottom-scene {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 2.2rem;
+    }
+
+    .bottom-scene span {
+      margin: 0 6px;
+      text-shadow: 0 0 18px rgba(15,23,42,.9);
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1><span class="emoji">🎄</span> Calendario de Adviento · AnxanWoman</h1>
+      <p class="subtitle">Haz clic en una casilla para ver el evento del día</p>
+    </header>
+
+    <section class="calendar">
+      <div class="filters">
+        <button class="filter-btn active" data-filter="todos">Todos</button>
+        <button class="filter-btn" data-filter="directos">Directos</button>
+        <button class="filter-btn" data-filter="clips">Clips</button>
+      </div>
+
+      <div class="grid" id="calendarGrid"></div>
+    </section>
+
+    <footer>Diseñado para la comunidad de AnxanWoman 💙</footer>
+
+    <div class="bottom-scene">
+      <span>🎄</span><span>🎁</span><span>🎄</span><span>🎁</span><span>🎄</span>
+    </div>
+  </main>
+
+  <!-- MODAL PRINCIPAL -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="modal">
+      <h2 id="modalTitle">Día X</h2>
+      <div class="meta">
+        <span id="metaMode"></span>
+        <span id="metaType"></span>
+        <span id="metaPrize"></span>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const YEAR = 2025;
+    const DIRECTO_DAYS = [1,2,5,8,9,10,12,14,15,17,19,21,22,26,27];
+    const BIG_PRIZE_DAYS = [5,14,21,27];
+
+    // Descripciones completas
+    const dayConfigs = [
+      {
+        day: 1, type: "Presentación del calendario", vb: 0,
+        description: `Día 1. Presentación del calendario.<br>
+Estaré en directo a partir de las 18.30 (hora española) presentando el calendario de adviento de Fortnite, su función y mecánica.<br><br>
+¡¡No te lo pierdas!!`
+      },
+      {
+        day: 2, type: "Directo sorpresa", vb: 0,
+        description: `Día 2. Directo Sorpresa<br>
+¿Directo un martes? Oh Oh Oh, Feliz pre-Navidad.<br>
+Nos vemos de 17.00 a 19.15 (hora española)`
+      },
+      {
+        day: 3, type: "Clip + sorteo", vb: 0,
+        description: `Día 3. Clip Día de descanso.<br>
+Renovación de ideas... PERO ¡Atentos al clip de hoy!<br>
+Si respondéis correctamente al short de Youtube o TikTok...<br>
+¡Entras en un sorteo!`
+      },
+      {
+        day: 4, type: "Clip + participación doble", vb: 0,
+        description: `Día 4. Clip Día de descanso<br>
+Renovación de ideas... PERO ¡Atentos al clip de hoy!<br>
+Si respondéis correctamente al short de Youtube o TikTok...<br>
+¡Entras en un sorteo! Además, si respondes correctamente al clip de ayer...<br>
+PARTICIPACIÓN DOBLE`
+      },
+      {
+        day: 5, type: "Fashion Show con premio", vb: 2500,
+        description: `Día 5. Fashion Show<br>
+Viernes de privadas temáticas... Primer viernes con... PREMIO<br>
+A partir de las 18.00 (hora española) realizaremos un Fashion Show entre toda la comunidad.<br>
+¡El top 3 tiene premio!<br><br>
+Premios:<br>
+Tercer premio - 500 pavos<br>
+Segundo premio - 800 pavos<br>
+Primer premio - 1200 pavos`
+      },
+      {
+        day: 6, type: "Descanso + resumen", vb: 0,
+        description: `Día 6. Día de descanso<br>
+¡Atentos a mi canal hoy! Se viene un short del resumen de la privada de ayer<br>
+¿Saldrás en el vídeo? ¡Compruébalo!`
+      },
+      {
+        day: 7, type: "Resumen semanal", vb: 0,
+        description: `Día 7. Resumen semanal<br>
+¡Primera semana completada!<br>
+¿Quieres ver que premios, retos y privadas hemos realizado?<br>
+¡Atentos al short resumen de la semana!<br>
+Déjame por comentarios cuál fue vuestro momento favorito`
+      },
+      {
+        day: 8, type: "Directo IRL", vb: 0,
+        description: `Día 8. Directo IRL<br>
+Estoy en Madrid y no habrá directo de Fortnite... en cambio... ¡SORPRESA!<br>
+Mini directo IRL (en la vida real).<br>
+Horario por confirmar - Recuerda activar las notificaciones para que te avise de mis directos`
+      },
+      {
+        day: 9, type: "Directo Fortnite + privadas", vb: 0,
+        description: `Día 9. ¿Directo?<br>
+¡HOY SI! DIRECTO DE FORTNITE<br>
+Horario: 17.00 - 19.15<br>
+¡Día de privadas en Recarga! Los ganadores de cada privada... tendrán mención especial en el siguiente directo`
+      },
+      {
+        day: 10, type: "Directo comunidad", vb: 0,
+        description: `Día 10. Directo<br>
+Hola Hola, hoy tenemos una sorpresa para toda la comunidad...<br>
+Horario: 18.30 - 21.30`
+      },
+      {
+        day: 11, type: "Clip sorteo", vb: 0,
+        description: `Día 11. Clip<br>
+¿Recuerdas los clips pasados de adivinar la respuesta?<br>
+HOY OTRO DE REGALO<br>
+Más posibilidades si respondes a los 3 clips de esta temática.`
+      },
+      {
+        day: 12, type: "Privada temática", vb: 0,
+        description: `Día 12. PRIVADA TEMATICA`
+      },
+      {
+        day: 13, type: "Clip mejores momentos", vb: 0,
+        description: `Día 13. Clip<br>
+¿Quieres ver los mejores momentos de esta semana?<br>
+Atent@ a mi contenido esta tarde. Seguramente salgas en el vídeo...`
+      },
+      {
+        day: 14, type: "Día de sorteo", vb: 1200,
+        description: `Día 14. DIA DE SORTEO<br>
+Jugaremos al Fortnite... Sí... habrá privadas... TAMBIÉN<br>
+PERO el premio es para 1 GANADOR.<br>
+La persona que más puntos consiga en un QUIZ SOBRE ANXANWOMAN.<br><br>
+Premio: 1200 pavos.`
+      },
+      {
+        day: 15, type: "Directo", vb: 0,
+        description: `Día 15. DIRECTO<br>
+Comenzamos la semana con unas partidas al Fortnite<br>
+En las privadas del directo, los ganadores llevan mención especial en el próximo directo.`
+      },
+      {
+        day: 16, type: "Clip sorteo extra", vb: 0,
+        description: `Día 16. CLIP<br>
+Clip nº4 que podéis responder... correctamente y os dará una participación extra en el sorteo.<br>
+¿Aún no sabes el premio? jeje, atent@ al próximo directo.`
+      },
+      {
+        day: 17, type: "Directo anuncio premio", vb: 0,
+        description: `Día 17. DIRECTO<br>
+Desvelamos en directo el día del sorteo y el PREMIO acumulado.<br>
+En las privadas los ganadores se llevan mención especial durante el próximo directo.`
+      },
+      {
+        day: 18, type: "Clip anuncio sorteo", vb: 0,
+        description: `Día 18. CLIP<br>
+¿Clip de sorteo? ¡HOY NO!<br>
+Clip anunciando fecha y hora del sorteo, cómo participar si te lo has perdido.<br>
+¡¡QUÉ NERVIOS!!`
+      },
+      {
+        day: 19, type: "Privadas", vb: 0,
+        description: `Día 19. PRIVADAS`
+      },
+      {
+        day: 20, type: "Clip resumen semana", vb: 0,
+        description: `DÍA 20. CLIP<br>
+Esta tarde clip resumen del contenido realizado esta semana.<br>
+Si vuelves a aparecer esta semana...<br>
+¡Eres un real de la comunidad! aunque seguro prefieres ser Unreal (¡Bdmmm tss!)`
+      },
+      {
+        day: 21, type: "Directo sorteo", vb: 1200,
+        description: `Día 21. DIRECTO SORTEO<br>
+Tercera semana de diciembre ya... UY Si hoy hay... ¡SORTEO!<br>
+Mañana se celebra el sorteo de la Lotería de Navidad en España, y en mi comunidad, se realiza hoy jeje.<br>
+Desvelamos qué persona que comentó los clips del sorteo se lleva el premio.`
+      },
+      {
+        day: 22, type: "Directo post-lotería", vb: 0,
+        description: `Día 22. DIRECTO SI NO SOY MILLONARIA<br>
+¡VAYA! ¡VAYA! Si estoy haciendo directo es que no me ha tocado el GORDO de navidad, aunque... afortunada de la comunidad que tengo.<br>
+Directo 18.30 - 21.30 (hora española)`
+      },
+      {
+        day: 23, type: "Clip mejores momentos", vb: 0,
+        description: `Día 23. Clip<br>
+Clip de los mejores momentos del directo. ¿Apareces en el vídeo?`
+      },
+      {
+        day: 24, type: "Nochebuena (descanso)", vb: 0,
+        description: `Día 24. NOCHEBUENA<br>
+Día de pasar con la familia. Hoy no hago directo, hay que disfrutar de estos momentos.`
+      },
+      {
+        day: 25, type: "Navidad (descanso)", vb: 0,
+        description: `Día 25. NAVIDAD<br>
+¡Feliz Navidad a toda mi comunidad! Espero que lo hayáis pasado super bien estos dos días, y que no hayáis viciado mucho jeje`
+      },
+      {
+        day: 26, type: "Directo postnavidad", vb: 0,
+        description: `Día 26. DIRECTO POSTNAVIDAD<br>
+¡SOLO QUEDA UN DÍA! Comentamos en directo todo lo que va a suceder mañana... o casi todo jeje.<br>
+¡HOY LAS ULTIMAS PRIVADAS DEL AÑO!`
+      },
+      {
+        day: 27, type: "Campanadas + gran sorteo", vb: 3600,
+        description: `Día 27. CAMPANADAS FIN DE AÑO ANXANWOMAN Y GRAN SORTEO<br>
+LLEGÓ EL DÍA (más esperado, o menos... según lo veas...)<br>
+Hoy tenemos... ¡PLANAZO!<br>
+Directo a partir de las 18.00 (hora española),<br>
+Comenzaremos reaccionando al REWIND 2025 de AnxanWoman.<br>
+A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año con toda la gente maravillosa de esta comunidad.<br>
+¡NO ME OLVIDO! SORTEAZO DOBLE. Hoy dos personas podrán ganar 1800 pavos para gastarse en la tienda de Fortnite.<br>
+¿Habéis revisado si tenéis el código AnxanWoman en la tienda de Fortnite?`
+      }
+    ];
+
+    const calendarGrid = document.getElementById("calendarGrid");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    const metaMode = document.getElementById("metaMode");
+    const metaType = document.getElementById("metaType");
+    const metaPrize = document.getElementById("metaPrize");
+
+    // Hoy
+    const now = new Date();
+    const todayIsDec = (now.getFullYear() === YEAR && now.getMonth() === 11);
+    const todayDay = todayIsDec ? now.getDate() : null;
+
+    // Estado de casillas abiertas
+    const OPEN_KEY = "anxan_opened_v1";
+    const openedSet = new Set(JSON.parse(localStorage.getItem(OPEN_KEY) || "[]"));
+    function saveOpened() {
+      localStorage.setItem(OPEN_KEY, JSON.stringify(Array.from(openedSet)));
+    }
+
+    // Toast central reutilizable
+    function showCenterToast(html) {
+      const existing = document.querySelector(".center-toast");
+      if (existing) existing.remove();
+      const div = document.createElement("div");
+      div.className = "center-toast";
+      div.innerHTML = html;
+      document.body.appendChild(div);
+      setTimeout(() => {
+        if (div.parentNode) div.parentNode.removeChild(div);
+      }, 2300);
+    }
+
+    // Easter eggs (1 vez por día real)
+    const EGGS_KEY = "anx_eggs_v1";
+    let eggs = JSON.parse(localStorage.getItem(EGGS_KEY) || "{}");
+    const todayKey = new Date().toISOString().slice(0,10);
+    if (!eggs[todayKey]) {
+      eggs[todayKey] = { prev:false, prize:false, d27:false, off:false, secret:false };
+    }
+    function saveEggs() {
+      localStorage.setItem(EGGS_KEY, JSON.stringify(eggs));
+    }
+    function triggerEgg(type, msg) {
+      if (eggs[todayKey][type]) return;
+      eggs[todayKey][type] = true;
+      saveEggs();
+      showCenterToast(msg);
+    }
+
+    function openModal(config, mode, hasPrize) {
+      modalTitle.textContent = `Día ${config.day}`;
+      metaMode.textContent = mode === "directo" ? "Formato: Directo" :
+                             mode === "clip" ? "Formato: Clip" : "Formato: —";
+      metaMode.className = "";
+      metaMode.classList.add(mode === "directo" ? "directo" : mode === "clip" ? "clip" : "");
+
+      metaType.textContent = `Tipo: ${config.type}`;
+      metaType.className = "";
+
+      if (hasPrize) {
+        metaPrize.textContent = "Premio activo";
+        metaPrize.className = "gold";
+      } else {
+        metaPrize.textContent = "Premio: sin premio económico directo";
+        metaPrize.className = "";
+      }
+
+      modalBody.innerHTML = config.description;
+      modalBackdrop.classList.add("visible");
+    }
+
+    function createCard(config) {
+      const day = config.day;
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "day";
+      card.dataset.day = day;
+
+      let mode;
+      if (day === 24 || day === 25) mode = "none";
+      else mode = DIRECTO_DAYS.includes(day) ? "directo" : "clip";
+
+      card.dataset.mode = mode;
+
+      const icon = mode === "directo" ? "🎥" : mode === "clip" ? "📱" : "🎄";
+      const hasPrize = BIG_PRIZE_DAYS.includes(day);
+
+      card.innerHTML = `
+        <span class="day-icon">${icon}</span>
+        ${hasPrize ? `<span class="day-star">⭐</span>` : ""}
+        <span class="day-number-center">${day}</span>
+      `;
+
+      if (day === 27) card.classList.add("special");
+      if (openedSet.has(day)) card.classList.add("opened");
+      if (todayIsDec && todayDay === day) card.classList.add("today");
+
+      card.addEventListener("click", () => {
+        // Restricción de futuro: solo si estamos en diciembre del año objetivo
+        if (todayIsDec && todayDay !== null && day > todayDay) {
+          // Easter eggs de premio futuro / 27
+          if (BIG_PRIZE_DAYS.includes(day)) {
+            triggerEgg("prize", "¡Qué impaciente eres! ⭐<br>Todo llega a su tiempo.");
+          }
+          if (day === 27) {
+            triggerEgg("d27", "¿Las campanadas ya? 😳<br>Aún falta un poquito 🎆");
+          }
+
+          showCenterToast("Aún no puedes abrir esta casilla, espera a que llegue el día ✨");
+          return;
+        }
+
+        // Easter egg día anterior (solo tiene sentido en diciembre)
+        if (todayIsDec && todayDay !== null && day === todayDay - 1) {
+          triggerEgg("prev", "Uy… esto ya ha pasado 👀<br>Ojalá tener una máquina del tiempo.");
+        }
+
+        openedSet.add(day);
+        saveOpened();
+        card.classList.add("opened");
+
+        if (mode === "directo") {
+          card.classList.add("flash-directo");
+          setTimeout(() => card.classList.remove("flash-directo"), 400);
+        } else if (mode === "clip") {
+          card.classList.add("flash-clip");
+          setTimeout(() => card.classList.remove("flash-clip"), 400);
+        }
+
+        openModal(config, mode, hasPrize);
+      });
+
+      return card;
+    }
+
+    // Pintar calendario
+    dayConfigs.forEach(cfg => {
+      calendarGrid.appendChild(createCard(cfg));
     });
-  });
-});
 
-// ——— EASTER EGGS ———
-let eggShownToday = JSON.parse(localStorage.getItem("eggs_shown")) || {};
-const todayKey = new Date().toISOString().slice(0,10);
-if(!eggShownToday[todayKey]) eggShownToday[todayKey] = {prev:false,prize:false,d27:false,off:false,secret:false};
-function saveEggs(){ localStorage.setItem("eggs_shown", JSON.stringify(eggShownToday)); }
+    // Cerrar modal
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        modalBackdrop.classList.remove("visible");
+      }
+    });
 
-function showEgg(type,msg){
- if(eggShownToday[todayKey][type]) return;
- eggShownToday[todayKey][type] = true;
- saveEggs();
- showCenterToast(msg);
-}
+    // Filtros
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    function applyFilter(filter) {
+      const cards = document.querySelectorAll(".day");
+      cards.forEach(card => {
+        card.classList.remove("dimmed");
+        const mode = card.dataset.mode;
+        if (filter === "directos" && mode !== "directo") {
+          card.classList.add("dimmed");
+        } else if (filter === "clips" && mode !== "clip") {
+          card.classList.add("dimmed");
+        }
+      });
+    }
 
-// Día anterior
-function checkPreviousDay(day){
- if(todayIsDec && day === todayDay-1)
- showEgg("prev","Uy… esto ya pasó 👀<br>¡Ojalá tener una máquina del tiempo!");
-}
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        applyFilter(btn.dataset.filter);
+      });
+    });
 
-// Premio futuro
-function checkPrizeDay(day){
- if(BIG_PRIZE_DAYS.includes(day) && todayIsDec && day > todayDay)
- showEgg("prize","¡Qué impaciente eres! ⭐<br>Todo llega a su tiempo.");
-}
+    applyFilter("todos");
 
-// Día 27 anticipado
-function check27(day){
- if(day===27 && todayIsDec && 27>todayDay)
- showEgg("d27","¿Las campanadas ya? 😳<br>Aún falta un poquito 🎆");
-}
+    // Easter egg: click fuera del calendario
+    document.addEventListener("click", (e) => {
+      const inCalendar = e.target.closest(".calendar");
+      const inModal = e.target.closest(".modal");
+      const inToast = e.target.closest(".center-toast");
+      if (!inCalendar && !inModal && !inToast) {
+        triggerEgg("off", "¿Buscando la casilla secreta? 👀<br>Quizá aparezca… algún día.");
+      }
+    });
 
-// Toque fuera del calendario
-window.addEventListener("click",(e)=>{
- if(e.target===document.body || e.target===document.documentElement)
- showEgg("off","¿Buscando la casilla secreta? 👀<br>Quizá aparezca… algún día.");
-});
-
-// Regalo oculto (zona final)
-window.addEventListener("scroll",()=>{
- if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 30)
- showEgg("secret","¡Encontraste el regalo escondido! 🎁<br>¡Eres un crack investigando!");
-});
-
-// Integrar en click de casilla
-const oldCreate = createCard;
-createCard = function(day){
- const btn = oldCreate(day);
- btn.addEventListener("click",()=>{
-   checkPreviousDay(day);
-   checkPrizeDay(day);
-   check27(day);
- });
- return btn;
-};
-</script>
+    // Easter egg: llegar al fondo de la página
+    window.addEventListener("scroll", () => {
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollBottom >= docHeight - 20) {
+        triggerEgg("secret", "¡Encontraste el regalo escondido! 🎁<br>¡Eres un crack investigando!");
+      }
+    });
+  </script>
 </body>
 </html>
