@@ -73,7 +73,7 @@
 
     /* COUNTDOWN */
     .countdown {
-      background: #020617;
+      background: #02091b;
       border-radius: 18px;
       border: 1px solid rgba(37,99,235,.5);
       padding: 10px 14px;
@@ -100,10 +100,11 @@
     }
 
     .calendar {
-      background: #020617;
+      background: #02091b; /* MÁS CLARO QUE EL FONDO GLOBAL */
       padding: 16px 16px 18px;
       border-radius: 22px;
       border: 1px solid rgba(15,23,42,.9);
+      box-shadow: 0 0 25px rgba(15,23,42,.8);
     }
 
     .filters {
@@ -144,7 +145,7 @@
 
     .day {
       position: relative;
-      background: #020617;
+      background: radial-gradient(circle at 0 0, rgba(96,165,250,.2) 0, transparent 55%), #020b2e;
       border-radius: 18px;
       padding: 10px;
       aspect-ratio: 1 / 1;
@@ -192,7 +193,10 @@
     .day-number-center {
       font-size: 1.9rem;
       font-weight: 800;
-      text-shadow: 0 0 12px rgba(255,255,255,.6);
+      color: #facc15; /* DORADO MÁS CLARO */
+      text-shadow:
+        0 0 10px rgba(250,204,21,.7),
+        0 0 18px rgba(15,23,42,1);
     }
 
     .day-icon {
@@ -371,7 +375,7 @@
       border-radius: 16px;
       border: 1px solid rgba(148,163,184,.7);
       padding: 10px 12px 12px;
-      width: 250px;
+      width: 260px;
       font-size: 0.85rem;
       box-shadow:
         0 16px 30px rgba(0,0,0,.9),
@@ -417,6 +421,10 @@
 
     .social-list li {
       margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
     }
 
     .social-list a {
@@ -427,6 +435,15 @@
 
     .social-list a span {
       margin-right: 6px;
+    }
+
+    .social-code {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .social-code strong {
+      color: #facc15;
     }
   </style>
 </head>
@@ -479,7 +496,7 @@
   <button class="social-fab" id="socialFab" type="button" aria-label="Redes sociales">
     🌐
   </button>
-  <div class="social-popup" id="socialPopup">
+  <div class="social-popup open" id="socialPopup">
     <div class="social-popup-header">
       <div class="social-popup-title">Sígueme en mis redes</div>
       <button class="social-close" id="socialClose" type="button">✕</button>
@@ -500,10 +517,8 @@
           <span>🎮</span> Twitch
         </a>
       </li>
-      <li>
-        <a href="https://www.instagram.com/anxanwoman" target="_blank" rel="noopener noreferrer">
-          <span>📸</span> Instagram
-        </a>
+      <li class="social-code">
+        <span>🧡</span> Código <strong>AnxanWoman</strong> en la tienda de Fortnite
       </li>
     </ul>
   </div>
@@ -702,7 +717,6 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     const metaMode = document.getElementById("metaMode");
     const metaType = document.getElementById("metaType");
     const metaPrize = document.getElementById("metaPrize");
-
     const countdownValues = document.getElementById("countdownValues");
 
     // Hoy
@@ -800,13 +814,11 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
       if (todayIsDec && todayDay === day) card.classList.add("today");
 
       card.addEventListener("click", () => {
-        // Restricción de futuro: solo si estamos en diciembre del año objetivo
         const now = new Date();
         const inTargetDec = (now.getFullYear() === YEAR && now.getMonth() === 11);
         const todayNum = inTargetDec ? now.getDate() : null;
 
         if (inTargetDec && todayNum !== null && day > todayNum) {
-          // Easter eggs de premio futuro / 27
           if (BIG_PRIZE_DAYS.includes(day)) {
             triggerEgg("prize", "¡Qué impaciente eres! ⭐<br>Todo llega a su tiempo.");
           }
@@ -818,7 +830,6 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
           return;
         }
 
-        // Easter egg día anterior (solo tiene sentido en diciembre)
         if (inTargetDec && todayNum !== null && day === todayNum - 1) {
           triggerEgg("prev", "Uy… esto ya ha pasado 👀<br>Ojalá tener una máquina del tiempo.");
         }
@@ -888,7 +899,7 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     });
 
     // COUNTDOWN PARA EL 27 DE DICIEMBRE A LAS 18:00
-    const countdownTarget = new Date(YEAR, 11, 27, 18, 0, 0); // 27 diciembre 2025 18:00
+    const countdownTarget = new Date(YEAR, 11, 27, 18, 0, 0);
 
     function updateCountdown() {
       const now = new Date();
@@ -931,3 +942,4 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
   </script>
 </body>
 </html>
+
