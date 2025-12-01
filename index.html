@@ -275,6 +275,61 @@ filterBtns.forEach(btn=>{
     });
   });
 });
+
+// ——— EASTER EGGS ———
+let eggShownToday = JSON.parse(localStorage.getItem("eggs_shown")) || {};
+const todayKey = new Date().toISOString().slice(0,10);
+if(!eggShownToday[todayKey]) eggShownToday[todayKey] = {prev:false,prize:false,d27:false,off:false,secret:false};
+function saveEggs(){ localStorage.setItem("eggs_shown", JSON.stringify(eggShownToday)); }
+
+function showEgg(type,msg){
+ if(eggShownToday[todayKey][type]) return;
+ eggShownToday[todayKey][type] = true;
+ saveEggs();
+ showCenterToast(msg);
+}
+
+// Día anterior
+function checkPreviousDay(day){
+ if(todayIsDec && day === todayDay-1)
+ showEgg("prev","Uy… esto ya pasó 👀<br>¡Ojalá tener una máquina del tiempo!");
+}
+
+// Premio futuro
+function checkPrizeDay(day){
+ if(BIG_PRIZE_DAYS.includes(day) && todayIsDec && day > todayDay)
+ showEgg("prize","¡Qué impaciente eres! ⭐<br>Todo llega a su tiempo.");
+}
+
+// Día 27 anticipado
+function check27(day){
+ if(day===27 && todayIsDec && 27>todayDay)
+ showEgg("d27","¿Las campanadas ya? 😳<br>Aún falta un poquito 🎆");
+}
+
+// Toque fuera del calendario
+window.addEventListener("click",(e)=>{
+ if(e.target===document.body || e.target===document.documentElement)
+ showEgg("off","¿Buscando la casilla secreta? 👀<br>Quizá aparezca… algún día.");
+});
+
+// Regalo oculto (zona final)
+window.addEventListener("scroll",()=>{
+ if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 30)
+ showEgg("secret","¡Encontraste el regalo escondido! 🎁<br>¡Eres un crack investigando!");
+});
+
+// Integrar en click de casilla
+const oldCreate = createCard;
+createCard = function(day){
+ const btn = oldCreate(day);
+ btn.addEventListener("click",()=>{
+   checkPreviousDay(day);
+   checkPrizeDay(day);
+   check27(day);
+ });
+ return btn;
+};
 </script>
 </body>
 </html>
