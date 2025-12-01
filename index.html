@@ -71,6 +71,34 @@
       color: var(--muted);
     }
 
+    /* COUNTDOWN */
+    .countdown {
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid rgba(37,99,235,.5);
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .countdown-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .countdown-values {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .countdown-values span {
+      display: inline-block;
+      margin-right: 6px;
+    }
+
     .calendar {
       background: #020617;
       padding: 16px 16px 18px;
@@ -315,6 +343,91 @@
       margin: 0 6px;
       text-shadow: 0 0 18px rgba(15,23,42,.9);
     }
+
+    /* POPUP REDES SOCIALES */
+    .social-fab {
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(148,163,184,.8);
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,.8);
+      z-index: 1500;
+    }
+
+    .social-popup {
+      position: fixed;
+      bottom: 70px;
+      left: 18px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.7);
+      padding: 10px 12px 12px;
+      width: 250px;
+      font-size: 0.85rem;
+      box-shadow:
+        0 16px 30px rgba(0,0,0,.9),
+        0 0 14px rgba(96,165,250,.4);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .18s ease-out, transform .18s ease-out;
+      z-index: 1500;
+    }
+
+    .social-popup.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .social-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .social-popup-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .social-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 4px;
+    }
+
+    .social-list {
+      list-style: none;
+      margin-top: 4px;
+    }
+
+    .social-list li {
+      margin-bottom: 4px;
+    }
+
+    .social-list a {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 0.82rem;
+    }
+
+    .social-list a span {
+      margin-right: 6px;
+    }
   </style>
 </head>
 <body>
@@ -323,6 +436,14 @@
       <h1><span class="emoji">🎄</span> Calendario de Adviento · AnxanWoman</h1>
       <p class="subtitle">Haz clic en una casilla para ver el evento del día</p>
     </header>
+
+    <!-- COUNTDOWN DIA 27 -->
+    <section class="countdown" id="countdownBox">
+      <div class="countdown-label">Cuenta atrás para el gran día (27 de diciembre)</div>
+      <div class="countdown-values" id="countdownValues">
+        <span>--d</span><span>--h</span><span>--m</span><span>--s</span>
+      </div>
+    </section>
 
     <section class="calendar">
       <div class="filters">
@@ -352,6 +473,39 @@
       </div>
       <div class="modal-body" id="modalBody"></div>
     </div>
+  </div>
+
+  <!-- BOTÓN Y POPUP REDES -->
+  <button class="social-fab" id="socialFab" type="button" aria-label="Redes sociales">
+    🌐
+  </button>
+  <div class="social-popup" id="socialPopup">
+    <div class="social-popup-header">
+      <div class="social-popup-title">Sígueme en mis redes</div>
+      <button class="social-close" id="socialClose" type="button">✕</button>
+    </div>
+    <ul class="social-list">
+      <li>
+        <a href="https://www.youtube.com/@AnxanWoman" target="_blank" rel="noopener noreferrer">
+          <span>📺</span> YouTube
+        </a>
+      </li>
+      <li>
+        <a href="https://www.tiktok.com/@anxanwoman" target="_blank" rel="noopener noreferrer">
+          <span>🎵</span> TikTok
+        </a>
+      </li>
+      <li>
+        <a href="https://www.twitch.tv/anxanwoman" target="_blank" rel="noopener noreferrer">
+          <span>🎮</span> Twitch
+        </a>
+      </li>
+      <li>
+        <a href="https://www.instagram.com/anxanwoman" target="_blank" rel="noopener noreferrer">
+          <span>📸</span> Instagram
+        </a>
+      </li>
+    </ul>
   </div>
 
   <script>
@@ -549,10 +703,12 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     const metaType = document.getElementById("metaType");
     const metaPrize = document.getElementById("metaPrize");
 
+    const countdownValues = document.getElementById("countdownValues");
+
     // Hoy
-    const now = new Date();
-    const todayIsDec = (now.getFullYear() === YEAR && now.getMonth() === 11);
-    const todayDay = todayIsDec ? now.getDate() : null;
+    const nowInit = new Date();
+    const todayIsDec = (nowInit.getFullYear() === YEAR && nowInit.getMonth() === 11);
+    const todayDay = todayIsDec ? nowInit.getDate() : null;
 
     // Estado de casillas abiertas
     const OPEN_KEY = "anxan_opened_v1";
@@ -596,7 +752,11 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
       metaMode.textContent = mode === "directo" ? "Formato: Directo" :
                              mode === "clip" ? "Formato: Clip" : "Formato: —";
       metaMode.className = "";
-      metaMode.classList.add(mode === "directo" ? "directo" : mode === "clip" ? "clip" : "");
+      if (mode === "directo") {
+        metaMode.classList.add("directo");
+      } else if (mode === "clip") {
+        metaMode.classList.add("clip");
+      }
 
       metaType.textContent = `Tipo: ${config.type}`;
       metaType.className = "";
@@ -641,7 +801,11 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
 
       card.addEventListener("click", () => {
         // Restricción de futuro: solo si estamos en diciembre del año objetivo
-        if (todayIsDec && todayDay !== null && day > todayDay) {
+        const now = new Date();
+        const inTargetDec = (now.getFullYear() === YEAR && now.getMonth() === 11);
+        const todayNum = inTargetDec ? now.getDate() : null;
+
+        if (inTargetDec && todayNum !== null && day > todayNum) {
           // Easter eggs de premio futuro / 27
           if (BIG_PRIZE_DAYS.includes(day)) {
             triggerEgg("prize", "¡Qué impaciente eres! ⭐<br>Todo llega a su tiempo.");
@@ -655,7 +819,7 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
         }
 
         // Easter egg día anterior (solo tiene sentido en diciembre)
-        if (todayIsDec && todayDay !== null && day === todayDay - 1) {
+        if (inTargetDec && todayNum !== null && day === todayNum - 1) {
           triggerEgg("prev", "Uy… esto ya ha pasado 👀<br>Ojalá tener una máquina del tiempo.");
         }
 
@@ -714,16 +878,6 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
 
     applyFilter("todos");
 
-    // Easter egg: click fuera del calendario
-    document.addEventListener("click", (e) => {
-      const inCalendar = e.target.closest(".calendar");
-      const inModal = e.target.closest(".modal");
-      const inToast = e.target.closest(".center-toast");
-      if (!inCalendar && !inModal && !inToast) {
-        triggerEgg("off", "¿Buscando la casilla secreta? 👀<br>Quizá aparezca… algún día.");
-      }
-    });
-
     // Easter egg: llegar al fondo de la página
     window.addEventListener("scroll", () => {
       const scrollBottom = window.scrollY + window.innerHeight;
@@ -731,6 +885,48 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
       if (scrollBottom >= docHeight - 20) {
         triggerEgg("secret", "¡Encontraste el regalo escondido! 🎁<br>¡Eres un crack investigando!");
       }
+    });
+
+    // COUNTDOWN PARA EL 27 DE DICIEMBRE A LAS 18:00
+    const countdownTarget = new Date(YEAR, 11, 27, 18, 0, 0); // 27 diciembre 2025 18:00
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = countdownTarget - now;
+
+      if (diff <= 0) {
+        countdownValues.innerHTML = "¡Hoy es el gran día! 🎉";
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      countdownValues.innerHTML = `
+        <span>${days}d</span>
+        <span>${hours}h</span>
+        <span>${minutes}m</span>
+        <span>${seconds}s</span>
+      `;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // POPUP REDES SOCIALES
+    const socialFab = document.getElementById("socialFab");
+    const socialPopup = document.getElementById("socialPopup");
+    const socialClose = document.getElementById("socialClose");
+
+    socialFab.addEventListener("click", () => {
+      socialPopup.classList.toggle("open");
+    });
+
+    socialClose.addEventListener("click", () => {
+      socialPopup.classList.remove("open");
     });
   </script>
 </body>
