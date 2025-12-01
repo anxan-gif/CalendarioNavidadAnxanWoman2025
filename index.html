@@ -100,7 +100,7 @@
     }
 
     .calendar {
-      background: #02091b; /* MÁS CLARO QUE EL FONDO GLOBAL */
+      background: #02091b;
       padding: 16px 16px 18px;
       border-radius: 22px;
       border: 1px solid rgba(15,23,42,.9);
@@ -199,7 +199,7 @@
     .day-number-center {
       font-size: 1.9rem;
       font-weight: 800;
-      color: #f9fafb; /* blanco */
+      color: #f9fafb;
       text-shadow:
         0 0 8px rgba(250,204,21,.7),
         0 0 16px rgba(15,23,42,1);
@@ -586,14 +586,11 @@
 
   <script>
     const YEAR = 2025;
-    const DIRECTO_DAYS = [1,2,5,8,9,10,12,14,15,17,19,21,22,26,27];
-    const BIG_PRIZE_DAYS = [5,14,21,27];
+    // Día 5 deja de ser directo, día 6 pasa a ser directo con premio
+    const DIRECTO_DAYS = [1,2,6,8,9,10,12,14,15,17,19,21,22,26,27];
+    const BIG_PRIZE_DAYS = [6,14,21,27];
 
-    // 🔢 Resumen diario (cambia estos números cuando quieras)
-    const SUMMARY_VB_TOTAL = 0;       // total de pavos repartidos hasta ahora
-    const SUMMARY_CODE_USERS = 0;     // nº de personas con el código AnxanWoman
-
-    // Descripciones completas
+    // Config días
     const dayConfigs = [
       {
         day: 1, type: "Presentación del calendario", vb: 0,
@@ -623,9 +620,15 @@ Si respondéis correctamente al short de Youtube o TikTok...<br>
 PARTICIPACIÓN DOBLE`
       },
       {
-        day: 5, type: "Fashion Show con premio", vb: 2500,
-        description: `Día 5. Fashion Show<br>
-Viernes de privadas temáticas... Primer viernes con... PREMIO<br>
+        day: 5, type: "Clip resumen", vb: 0,
+        description: `Día 5. Clip resumen<br>
+Hoy tendrás un clip con los mejores momentos de estos primeros días del calendario de adviento.<br>
+¿Te reconocerás en alguna jugada épica o momento divertido? 👀`
+      },
+      {
+        day: 6, type: "Fashion Show con premio", vb: 2500,
+        description: `Día 6. Fashion Show<br>
+Viernes de privadas temáticas... ¡y con PREMIO!<br>
 A partir de las 18.00 (hora española) realizaremos un Fashion Show entre toda la comunidad.<br>
 ¡El top 3 tiene premio!<br><br>
 Premios:<br>
@@ -634,16 +637,10 @@ Segundo premio - 800 pavos<br>
 Primer premio - 1200 pavos`
       },
       {
-        day: 6, type: "Descanso + resumen", vb: 0,
-        description: `Día 6. Día de descanso<br>
-¡Atentos a mi canal hoy! Se viene un short del resumen de la privada de ayer<br>
-¿Saldrás en el vídeo? ¡Compruébalo!`
-      },
-      {
         day: 7, type: "Resumen semanal", vb: 0,
         description: `Día 7. Resumen semanal<br>
 ¡Primera semana completada!<br>
-¿Quieres ver que premios, retos y privadas hemos realizado?<br>
+¿Quieres ver qué premios, retos y privadas hemos realizado?<br>
 ¡Atentos al short resumen de la semana!<br>
 Déjame por comentarios cuál fue vuestro momento favorito`
       },
@@ -775,6 +772,10 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
       }
     ];
 
+    // Totales dinámicos para el resumen
+    const SUMMARY_VB_TOTAL = dayConfigs.reduce((sum, d) => sum + (d.vb || 0), 0);
+    const SUMMARY_CODE_USERS = 25;
+
     const calendarGrid = document.getElementById("calendarGrid");
     const modalBackdrop = document.getElementById("modalBackdrop");
     const modalTitle = document.getElementById("modalTitle");
@@ -835,7 +836,7 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     }
 
     function maybeShowDailySummary() {
-      if (summarySeen[todayKey]) return; // ya mostrado hoy
+      if (summarySeen[todayKey]) return;
 
       const div = document.createElement("div");
       div.className = "daily-summary";
@@ -1047,3 +1048,4 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
   </script>
 </body>
 </html>
+
