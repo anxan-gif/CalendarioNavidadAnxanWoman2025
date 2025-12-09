@@ -69,6 +69,15 @@
     .subtitle {
       font-size: 0.85rem;
       color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* texto de racha */
+    .streak-text {
+      font-size: 0.8rem;
+      color: #f97316;
+      display: block;
+      margin-top: 2px;
     }
 
     /* COUNTDOWN */
@@ -512,7 +521,10 @@
   <main class="app">
     <header>
       <h1><span class="emoji">🎄</span> Calendario de Adviento · AnxanWoman</h1>
-      <p class="subtitle">Haz clic en una casilla para ver el evento del día</p>
+      <p class="subtitle">
+        Haz clic en una casilla para ver el evento del día<br>
+        <span id="streakText" class="streak-text"></span>
+      </p>
     </header>
 
     <!-- COUNTDOWN DIA 27 -->
@@ -589,7 +601,7 @@
     // Día 5 es clip, día 6 es directo con premio
     const DIRECTO_DAYS = [1,2,4,6,8,10,12,13,15,17,19,21,22,26,27];
     const BIG_PRIZE_DAYS = [6,14,21,27];
-
+ 
     // Config días
     const dayConfigs = [
       {
@@ -617,7 +629,7 @@ Código AnxanWoman en Fortnite`
 Directo temprano por ser jueves, horario 17.30 - 19.00<br>
 Decoramos el setup de navidad y jugamos unas partidas al Fortnite<br>
 ¡Plan de hoy!<br>
- Probar los minijuegos del capítulo 7(nuevo modo)`
+Probar los minijuegos del capítulo 7(nuevo modo)`
       },
       {
         day: 5, type: "Clip resumen", vb: 0,
@@ -641,9 +653,9 @@ Primer premio - 1200 pavos`
         description: `Día 7. Resumen semanal<br>
 ¡Primera semana completada!<br>
 ¡Atentos al clip de hoy...!<br>
-
+ 
 Si contestas correctamente al clip, ¡participas en un sorteo!<br>
-
+ 
 Yo que tu no me lo perdía... Código AnxanWoman en Fortnite`
       },
       {
@@ -776,7 +788,6 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
 ¿Habéis revisado si tenéis el código AnxanWoman en la tienda de Fortnite?`
       }
     ];
-
     // Totales dinámicos para el resumen: solo días ya llegados
     function computeSummaryVbTotal() {
       const now = new Date();
@@ -794,7 +805,7 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     }
 
     const SUMMARY_VB_TOTAL = computeSummaryVbTotal();
-    const SUMMARY_CODE_USERS = 37;
+    const SUMMARY_CODE_USERS = 37; // 👈 actualizado a 37
 
     const calendarGrid = document.getElementById("calendarGrid");
     const modalBackdrop = document.getElementById("modalBackdrop");
@@ -847,6 +858,39 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
       showCenterToast(msg);
     }
 
+    // ⭐ Racha de días visitando el calendario
+    const STREAK_KEY = "anx_streak_v1";
+    let streakData = JSON.parse(localStorage.getItem(STREAK_KEY) || "null");
+    const todayDate = new Date();
+    const todayStrFull = todayDate.toISOString().slice(0,10);
+    let currentStreak = 1;
+
+    if (streakData && streakData.lastDate) {
+      const lastDate = new Date(streakData.lastDate);
+      const diffMs = todayDate - lastDate;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) {
+        currentStreak = streakData.streak || 1;
+      } else if (diffDays === 1) {
+        currentStreak = (streakData.streak || 1) + 1;
+      } else {
+        currentStreak = 1;
+      }
+    }
+
+    streakData = { lastDate: todayStrFull, streak: currentStreak };
+    localStorage.setItem(STREAK_KEY, JSON.stringify(streakData));
+
+    const streakTextEl = document.getElementById("streakText");
+    if (streakTextEl) {
+      if (currentStreak <= 1) {
+        streakTextEl.textContent = "✨ Primer día de racha en el calendario";
+      } else {
+        streakTextEl.textContent = `🔥 Llevas ${currentStreak} días seguidos entrando al calendario`;
+      }
+    }
+
     // Resumen diario: solo 1 vez por día
     const SUMMARY_SEEN_KEY = "anx_summary_seen_v1";
     let summarySeen = JSON.parse(localStorage.getItem(SUMMARY_SEEN_KEY) || "{}");
@@ -858,12 +902,30 @@ A las 20.00 haremos la tradición de comer las uvas y celebrar este fin de año 
     function maybeShowDailySummary() {
       if (summarySeen[todayKey]) return;
 
+      // texto dinámico según la semana
+      const now = new Date();
+      let weekLine = "";
+      if (now.getFullYear() === YEAR && now.getMonth() === 11) {
+        const d = now.getDate();
+        if (d <= 7) {
+          weekLine = "Estamos en la primera semana del calendario, ¡esto acaba de empezar! 🔥";
+        } else if (d <= 14) {
+          weekLine = "Segunda semana del calendario, cada vez se vienen más sorpresas 👀";
+        } else if (d <= 21) {
+          weekLine = "Tercera semana… recta final antes del gran sorteo 🧡";
+        } else {
+          weekLine = "Últimos días del calendario, gracias por estar aquí hasta el final 💙";
+        }
+      }
+      const extraLine = weekLine ? `<p>${weekLine}</p>` : "";
+
       const div = document.createElement("div");
       div.className = "daily-summary";
       div.innerHTML = `
         <div class="daily-summary-title">Resumen del evento</div>
         <p>Hasta ahora hemos repartido <strong>${SUMMARY_VB_TOTAL} pavos</strong> entre la comunidad 🎁</p>
         <p><strong>${SUMMARY_CODE_USERS}</strong> personas tienen el código <strong>AnxanWoman</strong> en la tienda de Fortnite 💙</p>
+        ${extraLine}
         <button type="button">Entendido</button>
       `;
 
